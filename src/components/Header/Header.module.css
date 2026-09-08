@@ -1,0 +1,245 @@
+/* 1px probes parked in the document; absolutely positioned against the
+   initial containing block so they scroll with the page. They are what the
+   header watches instead of a scroll listener. */
+.probeTop,
+.probeCover {
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.probeTop {
+  top: 24px;
+}
+
+.probeCover {
+  top: 74vh;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid transparent;
+  will-change: transform;
+  transition:
+    border-color 0.3s var(--ease),
+    background-color 0.3s var(--ease),
+    opacity 0.35s var(--ease),
+    transform 0.45s var(--ease);
+}
+
+/* pulled off screen while the cover sheet is showing */
+.isHidden {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.isScrolled {
+  border-bottom-color: var(--rule);
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: 84px;
+  transition: height 0.35s var(--ease);
+}
+
+.isScrolled .bar {
+  height: 62px;
+}
+
+/* ---------- logo ---------- */
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--fg);
+}
+
+.logoMark {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  transition: transform 0.4s var(--ease);
+}
+
+.logo:hover .logoMark {
+  transform: translateY(-2px);
+}
+
+.logoText {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 7px;
+  font-family: var(--mono);
+  font-size: var(--mono-md);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+}
+
+.logoId {
+  color: var(--fg-dim);
+}
+
+/* ---------- nav ---------- */
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 3vw, 44px);
+}
+
+.navList {
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 2.4vw, 36px);
+}
+
+.navLink,
+.cta {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: var(--mono-sm);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+/* two stacked copies inside a clipped box; hover slides the stack up */
+.stack {
+  display: block;
+  overflow: hidden;
+  height: 1em;
+  line-height: 1em;
+}
+
+.stackInner {
+  display: block;
+  will-change: transform;
+  transition: transform 0.42s var(--ease);
+}
+
+.stackCopy {
+  display: block;
+  height: 1em;
+  line-height: 1em;
+  white-space: nowrap;
+}
+
+.navLink:hover .stackInner,
+.navLink:focus-visible .stackInner,
+.cta:hover .stackInner,
+.cta:focus-visible .stackInner {
+  transform: translateY(-1em);
+}
+
+.navLink:hover .stackCopy:last-child {
+  color: var(--accent);
+}
+
+/* the CTA is a solid accent block, not an outline */
+.cta {
+  background: var(--accent);
+  color: var(--ink);
+  padding: 11px 18px;
+  will-change: transform;
+}
+
+/* ---------- burger ---------- */
+
+.burger {
+  display: none;
+  font-family: var(--mono);
+  font-size: var(--mono-sm);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  border: 1px solid var(--rule);
+  padding: 9px 12px;
+}
+
+/* ---------- mobile overlay ---------- */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 96px var(--gutter) 40px;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    opacity 0.32s var(--ease),
+    transform 0.32s var(--ease);
+}
+
+.overlayOpen {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.overlayList {
+  border-top: 1px solid var(--rule);
+}
+
+.overlayLink {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--display);
+  font-size: clamp(38px, 12vw, 64px);
+  line-height: 1;
+}
+
+.overlayIndex {
+  font-family: var(--mono);
+  font-size: var(--mono-xs);
+  letter-spacing: 0.14em;
+  color: var(--fg-dim);
+}
+
+.overlayMail {
+  font-family: var(--mono);
+  font-size: var(--mono-sm);
+  letter-spacing: 0.1em;
+  color: var(--fg-mid);
+  word-break: break-all;
+}
+
+@media (max-width: 860px) {
+  .nav {
+    display: none;
+  }
+  .burger {
+    display: inline-block;
+  }
+  .bar,
+  .isScrolled .bar {
+    height: 64px;
+  }
+}
+
+@media (min-width: 861px) {
+  .overlay {
+    display: none;
+  }
+}

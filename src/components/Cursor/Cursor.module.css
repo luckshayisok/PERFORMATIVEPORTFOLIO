@@ -1,0 +1,39 @@
+.ring,
+.dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 120;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  will-change: transform;
+}
+
+.ring {
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border: 1px solid var(--fg);
+}
+
+.dot {
+  width: 3px;
+  height: 3px;
+  margin: -1.5px 0 0 -1.5px;
+  background: var(--accent);
+}
+
+/* inverts against whatever it sits on */
+.isActive {
+  mix-blend-mode: difference;
+  background: var(--fg);
+  border-color: var(--fg);
+}
+
+@media (hover: none), (pointer: coarse) {
+  .ring,
+  .dot {
+    display: none;
+  }
+}

@@ -1,0 +1,7 @@
+/* The chapter is the poster: the crowd carries the index, so there is no
+   row list and no counter under it any more. */
+.section {
+  position: relative;
+  z-index: 2;
+  padding: 0;
+}

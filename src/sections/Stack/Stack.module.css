@@ -1,0 +1,208 @@
+/* chapter marker — the site reads as a story, so every section says
+   where in it you are */
+.chapter {
+  font-family: var(--mono);
+  font-size: var(--mono-xs);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  /* the bone ground does not redefine --accent, and that orange only makes
+     2.69:1 here, so this chapter marker is a filled chip like the code is */
+  color: var(--ink);
+  background: var(--accent);
+  align-self: flex-start;
+  width: fit-content;
+  padding: 4px 9px;
+  margin-bottom: clamp(10px, 1.4vw, 18px);
+}
+
+.section {
+  position: relative;
+  z-index: 2;
+  padding: clamp(80px, 11vw, 160px) 0 clamp(64px, 9vw, 130px);
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.headTitle {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  font-family: var(--mono);
+  font-size: var(--mono-sm);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* on the bone ground the accent only reaches 2.69:1 as text, so the code
+   becomes a filled chip with ink type instead */
+.headCode {
+  background: var(--accent);
+  color: var(--ink);
+  padding: 3px 9px;
+}
+
+.headCount {
+  font-family: var(--mono);
+  font-size: var(--mono-xs);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+/* ---------- row ---------- */
+
+.row {
+  padding: clamp(24px, 3vw, 38px) 0 clamp(18px, 2vw, 26px);
+}
+
+.row + .row {
+  border-top: 1px solid var(--rule);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 168px minmax(0, 1fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.colCode {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: hidden;
+}
+
+/* the code carries the row, at the same weight as the title */
+.code {
+  font-family: var(--mono);
+  font-size: clamp(26px, 2.4vw, 40px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  display: block;
+}
+
+.id {
+  font-family: var(--mono);
+  font-size: var(--mono-xs);
+  letter-spacing: 0.18em;
+  color: var(--fg-dim);
+  display: block;
+  padding-top: 6px;
+}
+
+.title {
+  font-size: clamp(32px, 4.2vw, 74px);
+  line-height: 0.96;
+  letter-spacing: -0.028em;
+  overflow: hidden;
+  display: block;
+}
+
+.reveal {
+  will-change: transform;
+}
+
+/* ---------- two tag columns ---------- */
+
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tagWrap {
+  overflow: hidden;
+  line-height: 1.5;
+}
+
+.tagA,
+.tagB {
+  display: block;
+  font-family: var(--mono);
+  font-size: var(--mono-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-mid);
+  will-change: transform;
+}
+
+/* ---------- spectrum arrow ---------- */
+
+.spectrum {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: clamp(20px, 2.6vw, 34px);
+  color: var(--fg-mid);
+}
+
+.endpoint {
+  font-family: var(--mono);
+  font-size: var(--mono-md);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--fg);
+  flex: none;
+}
+
+.arrowSvg {
+  flex: 1 1 auto;
+  height: 10px;
+  min-width: 40px;
+  overflow: visible;
+}
+
+.arrowLine {
+  will-change: stroke-dashoffset;
+}
+
+.arrowHead {
+  flex: none;
+  margin-left: -12px;
+  will-change: transform;
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 1000px) {
+  .grid {
+    grid-template-columns: 136px minmax(0, 1fr);
+  }
+  .cols {
+    grid-column: 1 / -1;
+    padding-top: 6px;
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .colCode {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .cols {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+}

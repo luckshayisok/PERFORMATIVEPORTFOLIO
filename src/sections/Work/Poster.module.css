@@ -1,0 +1,307 @@
+/* ============================================================
+   WORK CHAPTER OPENER
+   The supplied plate printed square on the page, uncropped, with
+   the type set over it. Everything positions against the plate,
+   not against the section.
+   ============================================================ */
+
+/* full bleed and never cropped: the block is as wide as the screen and, since
+   the plate is square, exactly as tall */
+.poster {
+  width: 100%;
+  overflow: hidden;
+}
+
+.plate {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  /* type is sized off the plate, not the viewport, so the composition holds
+     together at every width. Note this also makes the plate a stacking
+     context, so the multiply below needs a ground of its own to blend
+     against — hence the explicit paper background. */
+  container-type: inline-size;
+  background: var(--paper);
+  will-change: transform;
+}
+
+.plate picture,
+.plateImg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.plateImg {
+  /* no object-fit crop: the plate is shown whole */
+  object-fit: fill;
+  /* printed onto the stock rather than sitting on it. No grayscale — the red
+     silhouette is part of the artwork and has to stay red. */
+  mix-blend-mode: multiply;
+}
+
+/* a fine dot screen so the plate reads as something that came off a press */
+.plate::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background-image: radial-gradient(
+    circle at 50% 50%,
+    rgba(19, 19, 19, 0.42) 0.9px,
+    transparent 1.1px
+  );
+  background-size: 3px 3px;
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* ---------- type ---------- */
+
+.type {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  margin: 0;
+  pointer-events: none;
+}
+
+.typeA,
+.typeB {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  font-family: var(--cond);
+  font-weight: 400;
+  font-size: clamp(34px, 8.4vw, 96px);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: lowercase;
+  color: var(--red-ink);
+}
+
+@supports (font-size: 1cqw) {
+  .typeA,
+  .typeB {
+    font-size: 11.2cqw;
+  }
+}
+
+/* the mask clips the reveal, so it has to leave room for descenders —
+   the tight setting is restored with a negative margin between lines */
+.typeMask + .typeMask {
+  margin-top: -0.17em;
+}
+
+.typeA {
+  left: 3%;
+  top: 33%;
+}
+
+.typeB {
+  right: 3%;
+  top: 45%;
+  text-align: right;
+  align-items: flex-end;
+}
+
+.typeMask {
+  display: block;
+  overflow: hidden;
+}
+
+.typeLine {
+  display: block;
+  padding-bottom: 0.1em;
+  will-change: transform;
+}
+
+/* ---------- printed matter ----------
+   Small red type sitting straight on the photograph is unreadable, so each
+   piece gets a paper knockout under it. Only the display type is large
+   enough to hold its own over the crowd. */
+
+.chapter,
+.note,
+.edition {
+  position: absolute;
+  z-index: 3;
+  background: var(--paper);
+  padding: 6px 10px;
+  font-family: var(--mono);
+  color: var(--red);
+}
+
+.chapter {
+  top: 3%;
+  left: 3%;
+  font-size: var(--mono-xs);
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.note {
+  left: 3%;
+  top: 56%;
+  max-width: min(34ch, 44%);
+  font-size: var(--mono-xs);
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.edition {
+  left: 3%;
+  bottom: 4%;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.barcode {
+  width: clamp(64px, 8vw, 96px);
+  height: 28px;
+  color: var(--red);
+}
+
+.editionText {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--mono-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.35;
+}
+
+.mark {
+  position: absolute;
+  z-index: 3;
+  right: 4%;
+  bottom: 4.5%;
+  /* a glow reads as a smudge over the dark part of the plate, so the mark
+     gets the same paper knockout as the rest of the printed matter */
+  width: 30px;
+  height: 30px;
+  padding: 6px;
+  background: var(--paper);
+  color: var(--red);
+}
+
+/* ---------- pins: one project per face ---------- */
+
+.pins {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pin {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  background: var(--paper);
+  color: var(--red);
+  font-family: var(--mono);
+  font-size: var(--mono-xs);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  will-change: transform;
+  transition:
+    opacity 0.32s var(--ease),
+    background-color 0.32s var(--ease),
+    color 0.32s var(--ease);
+}
+
+.pinCode {
+  /* a comfortable tap target even at the smallest plate size */
+  min-width: 44px;
+  padding: 9px 10px;
+  text-align: center;
+}
+
+/* the name is present for the accessible name of the link, and slides open
+   on hover — clipped, not hidden, so it still reads out */
+.pinName {
+  display: block;
+  max-width: 0;
+  overflow: hidden;
+  font-size: var(--mono-xs);
+  letter-spacing: 0.1em;
+  transition:
+    max-width 0.42s var(--ease),
+    padding 0.42s var(--ease);
+}
+
+.pins:hover .pin,
+.pins:focus-within .pin {
+  opacity: 0.34;
+}
+
+.pin:hover,
+.pin:focus-visible {
+  opacity: 1;
+  background: var(--red);
+  color: var(--paper);
+  z-index: 1;
+}
+
+.pin:hover .pinName,
+.pin:focus-visible .pinName {
+  max-width: 260px;
+  padding-right: 14px;
+}
+
+.fadeIn {
+  will-change: transform;
+}
+
+/* ---------- responsive ---------- */
+
+/* A square plate on a phone is only as tall as the screen is wide, so the
+   whole composition has to tighten or the type lands on the note. */
+@media (max-width: 700px) {
+  .typeA,
+  .typeB {
+    font-size: clamp(28px, 9vw, 50px);
+  }
+  @supports (font-size: 1cqw) {
+    .typeA,
+    .typeB {
+      font-size: 10.5cqw;
+    }
+  }
+  .typeA {
+    top: 23%;
+  }
+  .typeB {
+    top: 37%;
+  }
+  .note {
+    top: 62%;
+    max-width: 78%;
+  }
+  .edition {
+    bottom: 3.5%;
+  }
+  /* no hover on touch, so the names never open and the pins never dim */
+  .pins:hover .pin,
+  .pins:focus-within .pin {
+    opacity: 1;
+  }
+  .pinCode {
+    min-width: 40px;
+    padding: 8px 8px;
+  }
+  .mark {
+    width: 26px;
+    height: 26px;
+    padding: 5px;
+  }
+}

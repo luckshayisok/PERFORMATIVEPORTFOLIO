@@ -1,0 +1,41 @@
+.page {
+  position: relative;
+  z-index: 2;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding: 120px 0;
+}
+
+.code {
+  display: block;
+  font-family: var(--mono);
+  font-size: var(--mono-xs);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.title {
+  font-size: clamp(50px, 12vw, 170px);
+  line-height: 0.92;
+  padding: 32px 0;
+}
+
+.back {
+  display: inline-flex;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: var(--mono-xs);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  transition: color 0.3s var(--ease);
+}
+
+.back:hover,
+.back:focus-visible {
+  color: var(--accent);
+}
