@@ -830,3 +830,29 @@ each. `components/Turntable` decodes them once and scrubs them on a canvas
 driven by ScrollTrigger; swapping forty `<img>` elements thrashes layout,
 and a canvas lands the scrub on a frame that is already decoded. Under
 reduced motion it simply holds frame 0.
+
+### Part 11b — the rendered machine moved into the hero
+
+The hero's CRT is no longer drawn by `ink.ts`; it is the Blender render,
+laid over the stage as a canvas. Only its contact shadow is still drawn, so
+it sits on the same ground line as the lamp, plant, keyboard and tower.
+
+Tying the two coordinate spaces together is three measured numbers, in
+`CRT_BOX` at the top of `Hero.tsx`: across all 40 frames the machine's ink
+spans x 120–580 of the 700px frame and bottoms out at y 575. It is centred
+and its base does not move as it turns, so those numbers are enough to place
+the render at any size. The overlay is positioned in percentages of the
+stage, so it scales with the drawing instead of drifting off it.
+
+The turn runs `top top` → `bottom top`: the machine faces you at rest and
+only turns as the hero scrolls away. An earlier `top bottom` start meant the
+page loaded showing its back.
+
+**The flipbook is driven straight off `ScrollTrigger.progress`, not a
+scrubbed tween.** The tween version used `snap: 'frame'` and silently never
+updated the canvas — the trigger's progress moved, the drawn frame did not.
+A flipbook wants the exact frame for the current scroll position anyway, so
+the tween was only a way to go wrong.
+
+The toolkit went back to its graph plate, and MedAssist's fallback back to
+strata, so all four generators are still in use.

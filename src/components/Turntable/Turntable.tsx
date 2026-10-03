@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
-import { gsap, useGSAP, ScrollTrigger } from '../../lib/gsap';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useGSAP, ScrollTrigger } from '../../lib/gsap';
 import styles from './Turntable.module.css';
 
 const FRAMES = 40;
@@ -17,7 +17,25 @@ const frameSrc = (i: number) =>
  * Nothing here is required to understand the section — under reduced
  * motion, or if the frames fail, the first frame simply stays put.
  */
-export function Turntable({ reduced }: { reduced: boolean }) {
+type Props = {
+  reduced: boolean;
+  /** ScrollTrigger bounds — the hero turns the machine over its own
+      height, a plate in a column turns it as the column passes. */
+  start?: string;
+  end?: string;
+  caption?: boolean;
+  className?: string;
+  style?: CSSProperties;
+};
+
+export function Turntable({
+  reduced,
+  start = 'top 85%',
+  end = 'bottom 15%',
+  caption = true,
+  className = '',
+  style,
+}: Props) {
   const scope = useRef<HTMLDivElement>(null);
   const canvas = useRef<HTMLCanvasElement>(null);
   const images = useRef<HTMLImageElement[]>([]);
@@ -69,17 +87,22 @@ export function Turntable({ reduced }: { reduced: boolean }) {
       draw(0);
       if (reduced) return;
 
-      const tween = gsap.to(state.current, {
-        frame: FRAMES - 1,
-        ease: 'none',
-        snap: 'frame',
-        scrollTrigger: {
-          trigger: scope.current,
-          start: 'top 85%',
-          end: 'bottom 15%',
-          scrub: 0.5,
+      /* Driven straight off the trigger's progress rather than a scrubbed
+         tween: a flipbook wants the exact frame for the current scroll
+         position, and a tween in between only adds a way to go wrong. */
+      const st = ScrollTrigger.create({
+        trigger: scope.current,
+        start,
+        end,
+        onUpdate: (self) => {
+          const i = Math.max(
+            0,
+            Math.min(FRAMES - 1, Math.round(self.progress * (FRAMES - 1))),
+          );
+          if (i === state.current.frame) return;
+          state.current.frame = i;
+          draw(i);
         },
-        onUpdate: () => draw(Math.round(state.current.frame)),
       });
 
       const onResize = () => draw(Math.round(state.current.frame));
@@ -87,11 +110,10 @@ export function Turntable({ reduced }: { reduced: boolean }) {
 
       return () => {
         window.removeEventListener('resize', onResize);
-        tween.scrollTrigger?.kill();
-        tween.kill();
+        st.kill();
       };
     },
-    { scope, dependencies: [ready, reduced] },
+    { scope, dependencies: [ready, reduced, start, end] },
   );
 
   // the first frame refreshes measurements once the images settle
@@ -100,16 +122,18 @@ export function Turntable({ reduced }: { reduced: boolean }) {
   }, [ready]);
 
   return (
-    <div ref={scope} className={styles.wrap}>
+    <div ref={scope} className={`${styles.wrap} ${className}`} style={style}>
       <canvas
         ref={canvas}
         className={styles.canvas}
         role="img"
         aria-label="A cathode-ray monitor, drawn as line art, turning as the page scrolls."
       />
-      <span className={styles.caption}>
-        modelled, then drawn — {FRAMES} frames, 9° apart
-      </span>
+      {caption && (
+        <span className={styles.caption}>
+          modelled, then drawn — {FRAMES} frames, 9° apart
+        </span>
+      )}
     </div>
   );
 }

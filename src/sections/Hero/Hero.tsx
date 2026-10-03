@@ -8,6 +8,7 @@ import {
   type Pt,
 } from '../../lib/ink';
 import { profile, hero } from '../../data/site';
+import { Turntable } from '../../components/Turntable/Turntable';
 import { gsap, useGSAP } from '../../lib/gsap';
 import styles from './Hero.module.css';
 
@@ -26,6 +27,29 @@ const L1_CAP = 81; // ...and the top of its capitals
 const L2_BASE = 520; // MAHESHWARI baseline
 const L2_CAP = 364;
 const GROUND = 700;
+
+/* The render is a 700 × 700 frame. Measured across all 40 frames, the
+   machine's ink spans x 120–580 and bottoms out at y 575 — it is centred,
+   and the base does not move as it turns. Those three numbers are what let
+   the rendered machine stand on the same ground line as the drawings. */
+const FRAME = 700;
+const INK_W = 460; // widest the machine gets, at three-quarters
+const INK_BOTTOM = 575;
+const WANT_W = 344; // how wide it should be in the scene
+const WANT_CX = 192; // and where it should stand
+const SCALE = WANT_W / INK_W;
+const CRT_BOX = {
+  size: FRAME * SCALE,
+  left: WANT_CX - (FRAME / 2) * SCALE,
+  top: GROUND - INK_BOTTOM * SCALE,
+};
+
+/** Percentages of the stage, so the overlay scales with the drawing. */
+const CRT_STYLE = {
+  left: `${((CRT_BOX.left - VIEW.x) / VIEW.w) * 100}%`,
+  top: `${((CRT_BOX.top - VIEW.y) / VIEW.h) * 100}%`,
+  width: `${(CRT_BOX.size / VIEW.w) * 100}%`,
+};
 
 /** Short strokes where an object meets the ground, so it sits on it. */
 function shadow(ink: Ink, x: number, w: number, dense = 7) {
@@ -49,55 +73,11 @@ function shadow(ink: Ink, x: number, w: number, dense = 7) {
 function buildScene() {
   const ink = new Ink(987654321, 'h');
 
-  /* 1. The CRT. It stands on the ground at the left and its head covers
-        the feet of the first letters — never a whole letter, or the name
-        stops being readable. */
-  {
-    const x = 28;
-    const y = 470;
-    const w = 322;
-    const h = 214;
-    ink.shape('front', chamferPts(x, y, w, h, 18), {
-      shade: { x: x + w - 86, y, w: 86, h, gap: 6.5, cross: true, o: 0.9 },
-    });
-    ink.shape('front', chamferPts(x + 28, y + 26, w - 118, h - 92, 11), {
-      shade: { x: x + 28, y: y + 26, w: 46, h: h - 92, gap: 9, o: 0.45 },
-    });
-    // a face on the glass — the one thing on the page that is just charm
-    ink.line('front', [[x + 92, y + 64], [x + 92, y + 84]], 7.5);
-    ink.line('front', [[x + 156, y + 64], [x + 156, y + 84]], 7.5);
-    ink.line(
-      'front',
-      [
-        [x + 88, y + 104],
-        [x + 108, y + 119],
-        [x + 138, y + 119],
-        [x + 158, y + 104],
-      ],
-      4.2,
-    );
-    ink.line('front', circlePts(x + w - 46, y + 56, 14), 2.8, true);
-    ink.line('front', circlePts(x + w - 46, y + 104, 10), 2.8, true);
-    for (let i = 0; i < 4; i++) {
-      ink.line(
-        'front',
-        [[x + w - 70, y + 140 + i * 14], [x + w - 22, y + 140 + i * 14]],
-        2.3,
-      );
-    }
-    ink.shape(
-      'front',
-      [
-        [x + 108, y + h],
-        [x + 212, y + h],
-        [x + 228, GROUND - 18],
-        [x + 92, GROUND - 18],
-      ],
-      { shade: { x: x + 168, y: y + h, w: 62, h: 50, gap: 7 } },
-    );
-    ink.shape('front', chamferPts(x + 62, GROUND - 20, 196, 22, 7), {});
-    shadow(ink, x + 52, 220);
-  }
+  /* 1. The CRT is no longer drawn here — it is the 3D machine, rendered as
+        line art and laid over this stage by <Turntable>. Only its shadow
+        stays, so the thing still sits on the ground with everything else.
+        See CRT_BOX for how the two coordinate spaces are tied together. */
+  shadow(ink, 74, 236);
 
   /* 2. The tower, standing at the right. */
   {
@@ -388,6 +368,17 @@ export function Hero({
       </h1>
 
       <div className={styles.stage}>
+        <Turntable
+          reduced={reduced}
+          className={styles.machine}
+          style={CRT_STYLE}
+          caption={false}
+          /* the turn starts where the page does, so the machine is facing
+             you at rest and only turns as the hero scrolls away */
+          start="top top"
+          end="bottom top"
+        />
+
         <svg
           className={styles.svg}
           viewBox={`${VIEW.x} ${VIEW.y} ${VIEW.w} ${VIEW.h}`}

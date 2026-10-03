@@ -24,11 +24,29 @@
   margin-inline: auto;
 }
 
+.stage {
+  position: relative;
+}
+
 .svg {
   display: block;
   width: 100%;
   height: auto;
   overflow: visible;
+}
+
+/* The rendered machine is laid over the drawing in the stage's own
+   coordinates (see CRT_BOX in Hero.tsx), above the letters, exactly where
+   the drawn one used to stand. It is a picture, not a control. */
+.machine {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.machine canvas {
+  background: transparent;
+  border: 0;
 }
 
 /* the two lines of the wordmark; each one is clipped by its own band so

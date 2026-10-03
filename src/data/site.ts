@@ -195,7 +195,7 @@ export const work: WorkItem[] = [
     ],
     stack: ['Expo', 'React Native', 'TypeScript', 'Express', 'Prisma', 'PostgreSQL'],
     repo: 'https://github.com/luckshayisok/medassist',
-    plate: 'graph',
+    plate: 'strata',
     commits: 12,
   },
   {

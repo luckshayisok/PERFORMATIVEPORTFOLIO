@@ -139,6 +139,21 @@ def build():
     parts.append(cyl("knob-a", 0.17, 0.12, (0.86, -0.9, 1.72), (math.pi / 2, 0, 0)))
     parts.append(cyl("knob-b", 0.12, 0.12, (0.86, -0.9, 1.22), (math.pi / 2, 0, 0)))
 
+    # the face on the glass — the one thing on this page that is only charm.
+    # It sits a hair proud of the screen so Freestyle finds its silhouette.
+    eye_z, eye_y = 1.52, -0.955
+    for x in (-0.62, -0.02):
+        parts.append(cyl("eye-%s" % x, 0.1, 0.06, (x, eye_y, eye_z), (math.pi / 2, 0, 0), verts=16))
+    # the mouth is a row of overlapping blocks following an arc; shallower
+    # than this and they read as gritted teeth rather than a smile
+    for i in range(7):
+        t = i / 6
+        mx = -0.74 + t * 0.78
+        drop = math.sin(t * math.pi) * 0.26
+        parts.append(
+            box("smile-%d" % i, (0.2, 0.05, 0.075), (mx, eye_y, 1.2 - drop), bevel=0.016)
+        )
+
     # neck and base
     parts.append(cyl("neck", 0.42, 0.75, (0, 0, 0.3), verts=20))
     parts.append(cyl("base", 1.0, 0.22, (0, 0, 0.05), verts=28))
