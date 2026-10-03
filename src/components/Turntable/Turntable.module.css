@@ -1,0 +1,25 @@
+/* The 3D machine sits in the same square frame as a plate, so the
+   toolkit column keeps its shape whichever one is in it. */
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--paper);
+  border: 1px solid var(--rule-soft);
+}
+
+.caption {
+  font-family: var(--mono);
+  font-size: var(--mono-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}

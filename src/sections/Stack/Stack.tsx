@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { chapters, stack } from '../../data/site';
-import { Plate } from '../../components/Plate/Plate';
+import { Turntable } from '../../components/Turntable/Turntable';
 import { gsap, useGSAP } from '../../lib/gsap';
 import styles from './Stack.module.css';
 
@@ -50,15 +50,11 @@ export function Stack({ reduced }: { reduced: boolean }) {
 
         <div className={styles.grid}>
           <div className={styles.aside}>
-            <Plate
-              kind="graph"
-              plotKey="toolkit"
-              facts={{ tools: TOOLS, notes: stack.length }}
-              reduced={reduced}
-            />
+            <Turntable reduced={reduced} />
             <p className={styles.legend}>
-              {TOOLS} tools across {stack.length} areas. Every node is one of
-              them; every edge is two that have to agree on a format.
+              {TOOLS} tools across {stack.length} areas. The machine is
+              modelled in 3D and rendered as line art, one frame every 9° —
+              scrolling turns it.
             </p>
           </div>
 

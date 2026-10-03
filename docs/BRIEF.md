@@ -797,3 +797,36 @@ on click — looking at a file is not a commitment, downloading one is. The
 panel carries the download, an open-in-a-tab link for mobile browsers that
 will not render a PDF in an iframe, Escape to close, a focus trap, and it
 returns focus to whichever button opened it.
+
+### Part 11 — the machine in 3D (Blender)
+
+The CRT from the hero also exists as geometry. `scripts/crt_turntable.py`
+builds it in code — there is no .blend file to lose — and renders it turning,
+40 frames, 9° apart:
+
+```
+"C:/Program Files/Blender Foundation/Blender 5.2/blender.exe" \
+    --background --python scripts/crt_turntable.py
+```
+
+It is rendered with **Freestyle**, so what comes out is line art, not a
+shaded render: black outlines with a Perlin modifier so the line wobbles the
+way the browser's own ink does, flat paper surfaces, and a transparent film
+so the frames drop straight onto the page. The faces turned away from the key
+direction are filled with hard diagonal bands — the same cross-hatch the 2D
+machines carry — via a Wave texture masked by the normal's dot product.
+
+Three things that cost time, for next time:
+
+- the engine enum is `BLENDER_EEVEE` in Blender 5.x, not `BLENDER_EEVEE_NEXT`;
+- `PERLIN_NOISE_1D` takes `frequency`, not `scale`;
+- **node colours are linear, not sRGB.** Passing `#121110` straight in
+  rendered as mid grey. `srgb()` in the script does the conversion, and that
+  single fix is what made the lines read as ink.
+
+The PNGs land in `scripts/_turntable/` (gitignored, ~13MB). What ships is
+`public/turntable/*.webp` — 40 frames, 700px, 773KB in total, about 19KB
+each. `components/Turntable` decodes them once and scrubs them on a canvas
+driven by ScrollTrigger; swapping forty `<img>` elements thrashes layout,
+and a canvas lands the scrub on a frame that is already decoded. Under
+reduced motion it simply holds frame 0.

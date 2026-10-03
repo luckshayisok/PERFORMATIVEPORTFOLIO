@@ -23,3 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 *.claude
+
+# Blender render output — the webp frames in public/ are what ship
+scripts/_turntable/
