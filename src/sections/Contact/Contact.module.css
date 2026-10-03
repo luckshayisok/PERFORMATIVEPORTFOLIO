@@ -1,68 +1,59 @@
-/* chapter marker — the site reads as a story, so every section says
-   where in it you are */
-.chapter {
-  font-family: var(--mono);
-  font-size: var(--mono-xs);
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--accent);
-  padding-bottom: clamp(10px, 1.4vw, 18px);
-}
+/* ============================================================
+   PLATE 04 — OFF THE CLOCK
+   Three rows, one colophon. The label column is a fixed measure so
+   the three addresses start on the same vertical line.
+   ============================================================ */
 
 .section {
-  position: relative;
-  z-index: 2;
-  padding-top: clamp(72px, 10vw, 140px);
+  padding-block: var(--step);
+  background: var(--ink);
+  color: var(--paper);
+  /* the section flips the ground, so the tokens flip with it rather
+     than every child restating a colour */
+  --fg-mid: rgba(250, 248, 244, 0.82);
+  --fg-dim: rgba(250, 248, 244, 0.64);
+  --rule-soft: rgba(250, 248, 244, 0.18);
+  --accent: #ff7a5c;
 }
 
 .head {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 24px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--rule);
-  font-family: var(--mono);
-  font-size: var(--mono-sm);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: clamp(32px, 4vw, 52px);
 }
 
-.headCode {
-  color: var(--accent);
-  font-weight: 500;
-}
-
-.headCount {
-  font-size: var(--mono-xs);
+.head :global(.chapter) {
   color: var(--fg-dim);
 }
 
 .title {
-  font-size: clamp(46px, 9.4vw, 168px);
-  line-height: 0.88;
-  letter-spacing: -0.035em;
-  max-width: 15ch;
-  padding: clamp(40px, 5.5vw, 84px) 0 clamp(44px, 5.5vw, 92px);
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(44px, 9vw, 120px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
 }
 
-/* ---------- links ---------- */
-
-.links {
-  border-top: 1px solid var(--rule);
+.rows {
+  display: flex;
+  flex-direction: column;
 }
 
-.linkRow {
+.row {
   display: grid;
-  grid-template-columns: 168px minmax(0, 1fr);
+  grid-template-columns: 120px minmax(0, 1fr);
   align-items: baseline;
-  gap: 22px;
-  padding: clamp(18px, 2.4vw, 32px) 0;
-  border-bottom: 1px solid var(--rule);
+  gap: 12px 20px;
+  padding-block: clamp(14px, 1.6vw, 20px);
+  border-top: 1px solid var(--rule-soft);
 }
 
-.linkLabel {
+.row:last-child {
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.label {
   font-family: var(--mono);
   font-size: var(--mono-xs);
   letter-spacing: 0.2em;
@@ -70,76 +61,51 @@
   color: var(--fg-dim);
 }
 
-.link {
-  font-family: var(--mono);
-  font-weight: 500;
-  font-size: clamp(18px, 3.2vw, 46px);
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  color: var(--fg);
+.value {
+  font-family: var(--display);
+  font-size: clamp(20px, 2.6vw, 34px);
+  line-height: 1.1;
   word-break: break-word;
-  transition: color 0.3s var(--ease);
+  transition: color 0.18s var(--ease);
 }
 
-.link:hover,
-.link:focus-visible {
+.value:hover,
+.value:focus-visible {
   color: var(--accent);
 }
 
-/* ---------- book a call ---------- */
-
-.book {
-  display: inline-flex;
-  align-items: center;
-  gap: 18px;
-  margin: clamp(36px, 4.5vw, 64px) 0 clamp(56px, 7vw, 100px);
-  padding: clamp(18px, 2.2vw, 30px) clamp(24px, 3vw, 42px);
-  font-family: var(--mono);
-  font-size: clamp(13px, 1.35vw, 20px);
-  font-weight: 500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  will-change: transform;
-}
-
-.bookArrow {
-  transition: transform 0.3s var(--ease);
-}
-
-.book:hover .bookArrow {
-  transform: translate(3px, -3px);
-}
-
-/* ---------- footer ---------- */
-
-.footer {
-  border-top: 1px solid var(--rule);
-  padding: 22px 0;
-}
-
-.footerInner {
+.colophon {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 18px;
+  padding-top: clamp(32px, 4vw, 56px);
+}
+
+.note {
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--fg-dim);
+  max-width: 60ch;
+}
+
+.sign {
+  display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 16px;
+  gap: 8px 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule-soft);
   font-family: var(--mono);
   font-size: var(--mono-xs);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--fg-dim);
 }
 
-@media (max-width: 760px) {
-  .linkRow {
-    grid-template-columns: 1fr;
-    gap: 6px;
-  }
-  .footerInner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-  }
-  .footerMid {
-    order: 3;
+@media (max-width: 620px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
   }
 }

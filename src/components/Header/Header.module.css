@@ -1,6 +1,12 @@
-/* 1px probes parked in the document; absolutely positioned against the
-   initial containing block so they scroll with the page. They are what the
-   header watches instead of a scroll listener. */
+/* ============================================================
+   HEADER
+   The hero is a poster and takes no chrome, so on the home route the
+   bar only appears once the hero has been scrolled past. Everywhere
+   else it is there from the start.
+   ============================================================ */
+
+/* two 1px probes parked in the document; ScrollTrigger watches them
+   instead of a scroll listener */
 .probeTop,
 .probeCover {
   position: absolute;
@@ -8,15 +14,12 @@
   width: 1px;
   height: 1px;
   pointer-events: none;
-  opacity: 0;
 }
-
 .probeTop {
-  top: 24px;
+  top: 8px;
 }
-
 .probeCover {
-  top: 74vh;
+  top: 88svh;
 }
 
 .header {
@@ -25,88 +28,74 @@
   left: 0;
   right: 0;
   z-index: 100;
-  background: color-mix(in srgb, var(--bg) 82%, transparent);
-  backdrop-filter: blur(8px);
+  padding-block: 14px;
+  background: transparent;
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease),
+    opacity 0.3s var(--ease), transform 0.3s var(--ease);
   border-bottom: 1px solid transparent;
-  will-change: transform;
-  transition:
-    border-color 0.3s var(--ease),
-    background-color 0.3s var(--ease),
-    opacity 0.35s var(--ease),
-    transform 0.45s var(--ease);
-}
-
-/* pulled off screen while the cover sheet is showing */
-.isHidden {
-  transform: translateY(-100%);
-  opacity: 0;
-  pointer-events: none;
 }
 
 .isScrolled {
-  border-bottom-color: var(--rule);
-  background: color-mix(in srgb, var(--bg) 94%, transparent);
+  background: rgba(250, 248, 244, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom-color: var(--rule-soft);
+}
+
+.isHidden {
+  opacity: 0;
+  transform: translateY(-100%);
+  pointer-events: none;
 }
 
 .bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  height: 84px;
-  transition: height 0.35s var(--ease);
+  gap: 20px;
 }
 
-.isScrolled .bar {
-  height: 62px;
-}
-
-/* ---------- logo ---------- */
+/* ---------- mark ---------- */
 
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  color: var(--fg);
+  gap: 9px;
 }
 
 .logoMark {
   width: 22px;
   height: 22px;
+  color: var(--ink);
   flex: none;
-  transition: transform 0.4s var(--ease);
-}
-
-.logo:hover .logoMark {
-  transform: translateY(-2px);
 }
 
 .logoText {
   display: inline-flex;
   align-items: baseline;
-  gap: 7px;
+  gap: 6px;
   font-family: var(--mono);
-  font-size: var(--mono-md);
-  font-weight: 500;
-  letter-spacing: 0.18em;
+  font-weight: 700;
+  font-size: var(--mono-sm);
+  letter-spacing: 0.04em;
 }
 
 .logoId {
   color: var(--fg-dim);
+  font-weight: 400;
 }
 
 /* ---------- nav ---------- */
 
 .nav {
+  margin-left: auto;
   display: flex;
   align-items: center;
-  gap: clamp(20px, 3vw, 44px);
+  gap: clamp(18px, 2.4vw, 34px);
 }
 
 .navList {
   display: flex;
   align-items: center;
-  gap: clamp(16px, 2.4vw, 36px);
+  gap: clamp(14px, 2vw, 28px);
 }
 
 .navLink,
@@ -114,115 +103,115 @@
   display: inline-block;
   font-family: var(--mono);
   font-size: var(--mono-sm);
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--fg);
+  letter-spacing: 0.04em;
+  color: var(--fg-mid);
 }
 
-/* two stacked copies inside a clipped box; hover slides the stack up */
+.navLink:hover,
+.navLink:focus-visible {
+  color: var(--ink);
+}
+
+.cta {
+  font-weight: 700;
+  color: var(--paper);
+  background: var(--ink);
+  padding: 9px 15px;
+  transition: background 0.2s var(--ease);
+}
+
+.cta:hover,
+.cta:focus-visible {
+  background: var(--accent);
+}
+
+/* the label is printed twice and the pair slides up on hover, so the
+   word is replaced by itself rather than fading */
 .stack {
   display: block;
   overflow: hidden;
-  height: 1em;
-  line-height: 1em;
+  height: 1.25em;
 }
 
 .stackInner {
   display: block;
-  will-change: transform;
-  transition: transform 0.42s var(--ease);
+  transition: transform 0.32s var(--ease);
 }
 
 .stackCopy {
   display: block;
-  height: 1em;
-  line-height: 1em;
-  white-space: nowrap;
+  height: 1.25em;
+  line-height: 1.25em;
 }
 
 .navLink:hover .stackInner,
 .navLink:focus-visible .stackInner,
 .cta:hover .stackInner,
 .cta:focus-visible .stackInner {
-  transform: translateY(-1em);
+  transform: translateY(-1.25em);
 }
 
-.navLink:hover .stackCopy:last-child {
-  color: var(--accent);
-}
-
-/* the CTA is a solid red block. Ink on red is only 3.2:1, so it takes
-   paper type. */
-.cta {
-  background: var(--red);
-  color: var(--paper);
-  padding: 11px 18px;
-  will-change: transform;
-}
-
-/* ---------- burger ---------- */
+/* ---------- small screens ---------- */
 
 .burger {
   display: none;
+  margin-left: auto;
   font-family: var(--mono);
+  font-weight: 700;
   font-size: var(--mono-sm);
-  font-weight: 500;
   letter-spacing: 0.14em;
-  border: 1px solid var(--rule);
-  padding: 9px 12px;
 }
-
-/* ---------- mobile overlay ---------- */
 
 .overlay {
   position: fixed;
   inset: 0;
   z-index: 99;
-  background: var(--bg);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 96px var(--gutter) 40px;
+  justify-content: center;
+  gap: 28px;
+  padding: 96px var(--gutter) 48px;
+  background: var(--paper);
   opacity: 0;
-  transform: translateY(-8px);
-  transition:
-    opacity 0.32s var(--ease),
-    transform 0.32s var(--ease);
+  transition: opacity 0.25s var(--ease);
 }
 
 .overlayOpen {
   opacity: 1;
-  transform: translateY(0);
 }
 
 .overlayList {
-  border-top: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
 }
 
 .overlayLink {
   display: flex;
   align-items: baseline;
-  gap: 16px;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--rule);
+  gap: 14px;
+  padding-block: 14px;
+  border-top: 1px solid var(--rule-soft);
   font-family: var(--display);
-  font-size: clamp(38px, 12vw, 64px);
+  font-size: clamp(32px, 11vw, 56px);
   line-height: 1;
+}
+
+.overlayList li:last-child .overlayLink {
+  border-bottom: 1px solid var(--rule-soft);
 }
 
 .overlayIndex {
   font-family: var(--mono);
   font-size: var(--mono-xs);
-  letter-spacing: 0.14em;
-  color: var(--fg-dim);
+  letter-spacing: 0.2em;
+  color: var(--accent);
 }
 
 .overlayMail {
   font-family: var(--mono);
   font-size: var(--mono-sm);
-  letter-spacing: 0.1em;
-  color: var(--fg-mid);
+  letter-spacing: 0.08em;
+  color: var(--fg-dim);
   word-break: break-all;
 }
 
@@ -232,10 +221,6 @@
   }
   .burger {
     display: inline-block;
-  }
-  .bar,
-  .isScrolled .bar {
-    height: 64px;
   }
 }
 

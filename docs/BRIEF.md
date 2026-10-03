@@ -688,3 +688,62 @@ No console errors. No horizontal scroll at 1440, 1280, 1024, 768, 412 or 375.
 Nine routes plus the SPA fallback resolve. Mobile performance is capped by a
 1.7s first paint — the page is client-rendered, so nothing paints until the
 bundle runs. Prerendering is the fix, and it is its own piece of work.
+
+---
+
+## Part 10 — The ink redesign (2026-10-03)
+
+The magazine build was scrapped. The new direction is **ink on paper**: one
+drawing language for the whole site, after a reference of a heavy black
+wordmark with crosshatched characters climbing the letters.
+
+### The engine
+
+`src/lib/ink.ts` is the whole house style in one file. Shapes go in as plain
+point lists; it resamples every edge at a fixed step and nudges each sample
+off the true line, so a straight edge reads as drawn rather than printed.
+Shading is real cross-hatch — parallel strokes at an angle, emitted as one
+path and clipped to the shape — never a texture image.
+
+Everything is seeded (`makeRng`, xorshift32), so a drawing is identical on
+every render and between reloads. Nothing ever jumps.
+
+`src/lib/plot.ts` uses the same engine with a finer pen for the plates:
+`weave`, `orbits`, `strata` and `graph`. Each one is driven by numbers that
+are actually true of the thing it draws — commits in the repository (read
+from the GitHub API on 2026-10-03), tools in the stack, things the project
+does. Change the data and the drawing changes.
+
+### The hero
+
+`sections/Hero` draws the name and the machines in **one** SVG coordinate
+space, so they can never drift apart at any width — the stage scales as a
+single object. Four constants are the contract between the type and the
+drawings: `L1_BASE`, `L1_CAP`, `L2_BASE`, `GROUND`.
+
+Two rules learned by getting them wrong first:
+
+- **Big objects never cover a whole letter.** They stand on the ground and
+  cover the letters' feet. An earlier pass put the CRT in front of "MA" and
+  the name read "HESHWARI".
+- **Small objects stand on top of the first line**, which needs headroom in
+  the viewBox (`y = -46`) or the bot's aerial and the mug's steam are cropped.
+
+### The work
+
+Five projects, down from nine: the three client entries and Zenkai were cut
+on request. Each card carries a **real screenshot** of the running project,
+captured from its own deployment, plus its live and source links. Where a
+project has no public build to photograph, the card falls back to a plotted
+plate. The card's title link is stretched over the whole card and the two
+buttons sit above it, so no anchor is ever nested inside another.
+
+### Still needed from Lakshya
+
+- `public/work/medassist.*` and `public/work/job-monitor.*` — no public build
+  exists to photograph, so these two fall back to plates.
+- Better `public/work/geonix.*` and `public/work/kaizen.*`: both deployments
+  redirect to a sign-in screen, so the captures show the login, not the
+  product. Signing in is not mine to do.
+- Images are referenced from `shot` in `src/data/site.ts`; drop in a `.jpg`
+  and `.webp` at the same paths and update `width`/`height`.

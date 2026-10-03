@@ -4,6 +4,7 @@ import { work } from '../data/site';
 import { gsap, useGSAP, ScrollTrigger } from '../lib/gsap';
 import { RevealText } from '../components/RevealText';
 import { usePageTransition } from '../components/Transition/Transition';
+import { Plate } from '../components/Plate/Plate';
 import { NotFound } from './NotFound';
 import styles from './WorkDetail.module.css';
 
@@ -80,9 +81,37 @@ export function WorkDetail({ reduced }: { reduced: boolean }) {
           <span className={styles.id}>{item.id}</span>
         </div>
 
+        {/* the same image the index card carries, so the project is
+            recognisable on arrival */}
+        {item.shot ? (
+          <picture className={styles.shotWrap}>
+            <source srcSet={item.shot.webp} type="image/webp" />
+            <img
+              className={styles.shot}
+              src={item.shot.src}
+              width={item.shot.width}
+              height={item.shot.height}
+              alt={item.shot.alt}
+              decoding="async"
+            />
+          </picture>
+        ) : (
+          <Plate
+            kind={item.plate}
+            plotKey={item.slug}
+            facts={{
+              commits: item.commits,
+              tools: item.stack.length,
+              notes: item.highlights.length,
+            }}
+            reduced={reduced}
+            className={styles.plate}
+          />
+        )}
+
         <RevealText
           as="h1"
-          className={`${styles.title} display`}
+          className={styles.title}
           immediate
           delay={0.1}
           stagger={0.08}
@@ -202,7 +231,7 @@ export function WorkDetail({ reduced }: { reduced: boolean }) {
             }}
           >
             <span className={styles.nextLabel}>Next entry — {next.code}</span>
-            <span className={`${styles.nextName} display`}>{next.name}</span>
+            <span className={styles.nextName}>{next.name}</span>
           </a>
         )}
       </div>

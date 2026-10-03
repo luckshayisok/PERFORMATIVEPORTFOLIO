@@ -1,334 +1,122 @@
 /* ============================================================
-   CH.02 — THE TOOLKIT
-   A cut-out of the supplied machine on the paper. The section
-   opens zoomed into the TV and pulls back until the machine
-   settles into its place on the page. Nothing scrolls inside
-   the screen — the whole machine is what animates.
+   PLATE 02 — THE TOOLKIT
+   The drawing on the left is the whole stack at once; the list on the
+   right is its key. Both columns start on the same line.
    ============================================================ */
 
 .section {
-  position: relative;
-  z-index: 2;
-  min-height: 100svh;
-  display: flex;
-  align-items: center;
-  padding: clamp(56px, 7vw, 96px) var(--gutter);
-  /* the close-up is several times larger than the section, so it is
-     clipped to it rather than spilling over the chapters either side */
-  overflow: hidden;
+  padding-block: var(--step);
+  background: var(--paper-2);
+  border-block: 1px solid var(--rule-soft);
 }
 
-.inner {
-  position: relative;
-  width: 100%;
-  max-width: var(--maxw);
-  margin: 0 auto;
+.head {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: clamp(16px, 2.2vw, 28px);
+  gap: 14px;
+  padding-bottom: clamp(32px, 4vw, 52px);
 }
 
-.chapter {
-  position: relative;
-  z-index: 1;
-  align-self: flex-start;
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: start;
+}
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: sticky;
+  top: calc(var(--step) / 2);
+}
+
+/* the plate's sheet is the page ground here, since the section itself
+   is the darker stock */
+.aside :global(svg) {
+  background: var(--paper);
+}
+
+.legend {
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--fg-dim);
+  max-width: 40ch;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-block: clamp(16px, 1.8vw, 24px);
+  border-top: 1px solid var(--rule-soft);
+}
+
+.row:last-child {
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.rowHead {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+}
+
+.code {
   font-family: var(--mono);
+  font-weight: 700;
   font-size: var(--mono-xs);
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  letter-spacing: 0.18em;
   color: var(--accent);
 }
 
-/* ---------- the machine ---------- */
-
-.machine {
-  position: relative;
-  z-index: 2;
-  /* sized so the machine, the chapter marker and the footer all fit on one
-     screen once it has settled — the section is pinned while it lands */
-  width: min(100%, 720px, calc((100svh - 270px) * 1.15));
-  /* everything on the glass is sized off the machine, so it scales with the
-     photograph through the whole zoom */
-  container-type: inline-size;
+.rowTitle {
+  font-family: var(--display);
+  font-size: clamp(20px, 2vw, 26px);
+  line-height: 1.1;
 }
 
-.machine picture {
-  display: block;
-}
-
-.crt {
-  display: block;
-  width: 100%;
-  height: auto;
-}
-
-/* ---------- the glass ----------
-   The box is the screen's own bounding rect inside the photograph; the
-   polygon trims it to the trapezoid the screen makes in perspective. */
-
-.glass {
-  position: absolute;
-  left: 43.77%;
-  top: 10.79%;
-  width: 38.63%;
-  height: 39.03%;
-  clip-path: polygon(0% 9.22%, 100% 0%, 99.2% 87.55%, 4.04% 100%);
-  background: rgba(18, 22, 14, 0.55);
-  overflow: hidden;
-}
-
-/* both layers sit on the screen a few degrees off square, as it does in
-   the photograph */
-.screenList,
-.screenHeadings {
-  position: absolute;
-  transform-origin: top left;
-  rotate: -3.4deg;
-  font-family: var(--mono);
-  text-transform: uppercase;
-  color: #eae6dc;
-}
-
-/* full listing — sized to be read while the TV fills the view.
-   Width is the binding constraint: three columns of the longest line
-   ("> DAT DATA & PERSISTENCE", 24ch) have to fit side by side, which caps
-   the size at ~0.74cqw. Height has room to spare, so the leading opens up
-   instead. */
-.screenList {
-  left: 6%;
-  top: 13%;
-  width: 89%;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  column-gap: 1.2em;
-  row-gap: 2em;
-  font-size: 0.72cqw;
-  line-height: 1.75;
-  letter-spacing: 0.02em;
-}
-
-/* area headings — sized to be read once the machine has settled */
-.screenHeadings {
-  left: 7%;
-  top: 15%;
-  width: 88%;
-  display: flex;
-  flex-direction: column;
-  font-size: 1.75cqw;
-  line-height: 1.7;
-  letter-spacing: 0.04em;
-}
-
-.block {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.lineHead {
-  display: flex;
-  align-items: baseline;
-  gap: 0.55em;
-  white-space: nowrap;
-  color: #f4f1e8;
-}
-
-.prompt,
-.headCode {
-  color: var(--red-ink);
-}
-
-.lineItem {
-  padding-left: 1.4em;
-  white-space: nowrap;
-  color: rgba(234, 230, 220, 0.84);
-}
-
-.lineFlow {
-  padding-left: 1.4em;
-  white-space: nowrap;
-  color: rgba(234, 230, 220, 0.6);
-}
-
-.caret {
-  display: inline-block;
-  width: 0.62em;
-  height: 1em;
-  background: #f4f1e8;
-  animation: blink 1.05s steps(1, end) infinite;
-}
-
-@keyframes blink {
-  0%,
-  50% {
-    opacity: 1;
-  }
-  50.01%,
-  100% {
-    opacity: 0;
-  }
-}
-
-/* ---------- glass treatments ---------- */
-
-.scanlines {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.3) 0 1px,
-    transparent 1px 3px
-  );
-  opacity: 0.45;
-}
-
-.glare {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    120% 90% at 22% 8%,
-    rgba(255, 255, 255, 0.16) 0%,
-    rgba(255, 255, 255, 0.04) 38%,
-    transparent 62%
-  );
-}
-
-/* ---------- the printed list ----------
-   Used on phones and under reduced motion, where 61 lines cannot live on
-   the glass. Only one of this and .screenList is ever displayed. */
-
-.printed {
-  display: none;
-  width: 100%;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 22px 18px;
+.flow {
+  margin-left: auto;
   font-family: var(--mono);
   font-size: var(--mono-xs);
-  line-height: 1.6;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
-
-.printed .lineHead {
-  color: var(--fg);
-  white-space: normal;
-}
-
-.printed .prompt,
-.printed .headCode {
-  color: var(--red);
-}
-
-.printed .lineItem {
-  color: var(--fg-mid);
-  white-space: normal;
-}
-
-.printed .lineFlow {
+  letter-spacing: 0.16em;
   color: var(--fg-dim);
-  white-space: normal;
 }
 
-/* ---------- printed matter ---------- */
-
-.footer {
-  position: relative;
-  z-index: 1;
-  align-self: flex-start;
+.tools {
   display: flex;
-  align-items: flex-end;
-  gap: 12px;
-  color: var(--red);
+  flex-wrap: wrap;
+  gap: 6px 8px;
 }
 
-.barcode {
-  width: clamp(64px, 7vw, 92px);
-  height: 26px;
-  color: var(--red);
-}
-
-.footerText {
-  display: flex;
-  flex-direction: column;
+.tool {
   font-family: var(--mono);
-  font-size: var(--mono-xs);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  line-height: 1.35;
+  font-size: var(--mono-sm);
+  color: var(--fg-mid);
+  border: 1px solid var(--rule-soft);
+  padding: 4px 9px;
+  background: var(--paper);
 }
 
-/* ---------- motion defaults on wide screens ----------
-   The timeline fades the headings in as the machine lands; before it runs
-   they start hidden so the two layers never overlap. */
-
-@media (min-width: 701px) {
-  .screenHeadings {
-    opacity: 0;
-  }
-}
-
-/* ---------- phones ----------
-   The zoom still runs, but the glass only ever carries the headings and the
-   full list is printed on the paper below. */
-
-@media (max-width: 700px) {
-  .machine {
-    width: min(100%, 560px);
-  }
-  .screenList {
-    display: none;
-  }
-  /* the glass is ~132px wide here: a full title cannot be set above the
-     legible minimum, so only the codes stay on screen */
-  .screenHeadings {
-    font-size: 12px;
-    line-height: 1.5;
-  }
-  .screenHeadings .headTitle {
-    display: none;
-  }
-  .printed {
-    display: grid;
-  }
-}
-
-@media (max-width: 420px) {
-  .printed {
+@media (max-width: 900px) {
+  .grid {
     grid-template-columns: minmax(0, 1fr);
   }
-}
-
-/* ---------- reduced motion ----------
-   Nothing pins and nothing zooms: the machine sits at rest with the
-   headings on the glass, and the full list is printed below. */
-
-.isStatic {
-  min-height: 0;
-  overflow: visible;
-}
-
-.isStatic .screenList {
-  display: none;
-}
-
-.isStatic .screenHeadings {
-  opacity: 1;
-}
-
-.isStatic .printed {
-  display: grid;
-}
-
-@media (min-width: 701px) {
-  .isStatic .printed {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .aside {
+    position: static;
+    max-width: 420px;
   }
-}
-
-.isStatic .caret {
-  animation: none;
+  .flow {
+    margin-left: 0;
+    width: 100%;
+  }
 }

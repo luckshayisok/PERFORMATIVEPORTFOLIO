@@ -8,7 +8,7 @@ export function NotFound() {
     <main id="main" className={styles.page}>
       <div className="shell">
         <span className={styles.code}>404 — NO ENTRY</span>
-        <h1 className={`${styles.title} display`}>Not indexed.</h1>
+        <h1 className={styles.title}>Not indexed.</h1>
         <a
           href="/"
           className={styles.back}

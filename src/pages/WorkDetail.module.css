@@ -1,8 +1,11 @@
+/* ============================================================
+   WORK DETAIL
+   One column of running text with a side column of metadata. The
+   plate is the same drawing the index card carries.
+   ============================================================ */
+
 .page {
-  position: relative;
-  z-index: 2;
-  padding: 120px 0 0;
-  min-height: 100svh;
+  padding-block: clamp(96px, 13vh, 150px) var(--step);
 }
 
 .back {
@@ -10,80 +13,91 @@
   align-items: center;
   gap: 8px;
   font-family: var(--mono);
-  font-size: var(--mono-xs);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-size: var(--mono-sm);
+  letter-spacing: 0.06em;
   color: var(--fg-dim);
-  transition: color 0.3s var(--ease);
 }
 
 .back:hover,
 .back:focus-visible {
-  color: var(--accent);
+  color: var(--ink);
 }
 
 .head {
   display: flex;
   align-items: baseline;
-  justify-content: space-between;
-  gap: 20px;
-  margin-top: 28px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--rule);
+  gap: 16px;
+  padding-top: clamp(24px, 4vw, 44px);
   font-family: var(--mono);
-  letter-spacing: 0.16em;
+  font-size: var(--mono-xs);
+  letter-spacing: 0.2em;
   text-transform: uppercase;
 }
 
 .code {
-  font-size: var(--mono-md);
-  font-weight: 500;
+  font-weight: 700;
   color: var(--accent);
 }
 
 .id {
-  font-size: var(--mono-xs);
   color: var(--fg-dim);
 }
 
+.plate {
+  max-width: 300px;
+  margin-block: clamp(20px, 3vw, 32px);
+}
+
+.shotWrap {
+  display: block;
+  max-width: 760px;
+  margin-block: clamp(20px, 3vw, 32px);
+  border: 1px solid var(--rule-soft);
+  background: var(--paper-2);
+}
+
+.shot {
+  width: 100%;
+  height: auto;
+}
+
 .title {
-  font-size: clamp(46px, 10vw, 156px);
-  line-height: 0.92;
-  padding: clamp(28px, 4vw, 56px) 0 18px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(40px, 8vw, 104px);
+  line-height: 0.95;
+  letter-spacing: -0.02em;
 }
 
 .tagline {
+  padding-top: 14px;
   font-family: var(--sans);
-  font-size: clamp(15px, 1.2vw, 19px);
-  line-height: 1.6;
-  letter-spacing: -0.005em;
+  font-size: clamp(16px, 1.6vw, 21px);
+  line-height: 1.45;
   color: var(--fg-mid);
-  max-width: 54ch;
-  padding-bottom: clamp(32px, 4vw, 56px);
+  max-width: 44ch;
 }
 
-/* ---------- meta strip ---------- */
+/* ---------- metadata ---------- */
 
 .meta {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--rule);
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px 20px;
+  margin-block: clamp(32px, 4vw, 52px);
+  padding-block: clamp(18px, 2vw, 26px);
+  border-block: 1px solid var(--rule-soft);
 }
 
 .metaCell {
-  background: var(--bg);
-  padding: 18px clamp(10px, 1.6vw, 20px);
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  font-family: var(--mono);
-  will-change: transform;
+  gap: 6px;
+  min-width: 0;
 }
 
 .metaCell dt {
+  font-family: var(--mono);
   font-size: var(--mono-xs);
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -92,34 +106,33 @@
 
 .metaCell dd {
   margin: 0;
+  font-family: var(--mono);
   font-size: var(--mono-sm);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--fg);
+  word-break: break-word;
 }
 
 /* ---------- body ---------- */
 
 .body {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr);
-  gap: clamp(28px, 5vw, 90px);
-  padding: clamp(40px, 5vw, 76px) 0;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  gap: clamp(28px, 4vw, 64px);
+  align-items: start;
 }
 
 .summary {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  max-width: 62ch;
+  gap: 18px;
 }
 
 .para {
   font-family: var(--sans);
-  font-size: clamp(15px, 1.05vw, 17px);
+  font-size: clamp(15px, 1.2vw, 17px);
   line-height: 1.65;
-  letter-spacing: -0.005em;
   color: var(--fg-mid);
+  max-width: 62ch;
 }
 
 .chipsCol {
@@ -131,70 +144,114 @@
 .colLabel {
   font-family: var(--mono);
   font-size: var(--mono-xs);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--fg-dim);
-  padding-bottom: 8px;
-  border-bottom: 1px solid var(--rule);
 }
 
 .chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
 }
 
 .chip {
-  display: inline-block;
-  padding: 7px 11px;
-  border: 1px solid var(--rule);
   font-family: var(--mono);
-  font-size: var(--mono-xs);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font-size: var(--mono-sm);
   color: var(--fg-mid);
-  will-change: transform;
+  border: 1px solid var(--rule-soft);
+  padding: 4px 9px;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding-top: 6px;
+}
+
+.linkBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: var(--mono-sm);
+  padding: 10px 16px;
+  border: 1.5px solid var(--ink);
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.linkBtn:hover,
+.linkBtn:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.linkPrimary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.linkPrimary:hover,
+.linkPrimary:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.clientNote {
+  font-family: var(--sans);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--fg-dim);
 }
 
 /* ---------- highlights ---------- */
 
 .hl {
-  padding-bottom: clamp(48px, 6vw, 90px);
+  margin-top: var(--step);
 }
 
 .hlTitle {
   display: flex;
   align-items: baseline;
-  gap: 14px;
-  font-family: var(--mono);
-  font-size: var(--mono-sm);
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--rule);
+  gap: 12px;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(26px, 3.4vw, 42px);
+  line-height: 1.05;
+  padding-bottom: clamp(14px, 2vw, 22px);
 }
 
 .hlCode {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: var(--mono-xs);
+  letter-spacing: 0.2em;
   color: var(--accent);
 }
 
 .hlRow {
   display: grid;
-  grid-template-columns: 60px minmax(0, 1fr);
+  grid-template-columns: 44px minmax(0, 1fr);
   gap: 16px;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--rule);
+  padding-block: clamp(14px, 1.6vw, 20px);
+  border-top: 1px solid var(--rule-soft);
   font-family: var(--sans);
-  font-size: clamp(14px, 0.95vw, 16px);
+  font-size: clamp(15px, 1.2vw, 17px);
   line-height: 1.6;
   color: var(--fg-mid);
-  will-change: transform;
+}
+
+.hl ul li:last-child {
+  border-bottom: 1px solid var(--rule-soft);
 }
 
 .hlIndex {
+  font-family: var(--mono);
+  font-size: var(--mono-xs);
+  letter-spacing: 0.14em;
   color: var(--fg-dim);
-  letter-spacing: 0.16em;
 }
 
 /* ---------- next ---------- */
@@ -202,23 +259,25 @@
 .next {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: clamp(36px, 5vw, 70px) 0;
+  gap: 8px;
+  margin-top: var(--step);
+  padding-top: clamp(22px, 3vw, 34px);
   border-top: 1px solid var(--rule);
 }
 
 .nextLabel {
   font-family: var(--mono);
   font-size: var(--mono-xs);
-  letter-spacing: 0.18em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--fg-dim);
 }
 
 .nextName {
-  font-size: clamp(36px, 6vw, 84px);
+  font-family: var(--display);
+  font-size: clamp(34px, 6vw, 72px);
   line-height: 1;
-  transition: color 0.35s var(--ease);
+  letter-spacing: -0.015em;
 }
 
 .next:hover .nextName,
@@ -226,80 +285,11 @@
   color: var(--accent);
 }
 
-/* ---------- responsive ---------- */
-
-@media (max-width: 900px) {
-  .body {
-    grid-template-columns: 1fr;
-  }
+@media (max-width: 860px) {
   .meta {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-}
-
-@media (max-width: 560px) {
-  .hlRow {
-    grid-template-columns: 40px minmax(0, 1fr);
-    gap: 10px;
+  .body {
+    grid-template-columns: minmax(0, 1fr);
   }
-}
-
-/* ---------- project links ----------
-   Only rendered when the project really has them; client work gets a note
-   instead, so a card never looks like it is missing a broken link. */
-
-.links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding-top: clamp(16px, 2vw, 24px);
-}
-
-.linkBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 16px;
-  border: 1px solid var(--rule);
-  font-family: var(--mono);
-  font-size: var(--mono-xs);
-  font-weight: 500;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--fg);
-  transition:
-    background-color 0.3s var(--ease),
-    border-color 0.3s var(--ease),
-    color 0.3s var(--ease);
-}
-
-.linkBtn:hover,
-.linkBtn:focus-visible {
-  border-color: var(--red);
-  color: var(--red);
-}
-
-/* the live demo is the primary action, so it is a filled red field —
-   which means paper type, never ink */
-.linkPrimary {
-  background: var(--red);
-  border-color: var(--red);
-  color: var(--paper);
-}
-
-.linkPrimary:hover,
-.linkPrimary:focus-visible {
-  background: var(--red-ink);
-  border-color: var(--red-ink);
-  color: var(--paper);
-}
-
-.clientNote {
-  margin: 0;
-  padding-top: clamp(14px, 1.8vw, 20px);
-  font-family: var(--sans);
-  font-size: var(--mono-xs);
-  line-height: 1.5;
-  letter-spacing: 0.06em;
-  color: var(--fg-dim);
 }

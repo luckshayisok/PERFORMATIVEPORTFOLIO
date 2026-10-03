@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0b0b0b" />
+    <meta name="theme-color" content="#faf8f4" />
 
     <title>Lakshya Maheshwari — Software Engineer</title>
     <meta
@@ -20,47 +20,13 @@
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-    <!-- the cover figure is the LCP element and is rendered by JS, so the
-         browser cannot discover it from the markup on its own -->
-    <link
-      rel="preload"
-      as="image"
-      type="image/webp"
-      href="/portrait-1080.webp"
-      imagesrcset="/portrait-540.webp 540w, /portrait-810.webp 810w, /portrait-1080.webp 1080w"
-      imagesizes="(max-width: 900px) 78vw, 58vw"
-      fetchpriority="high"
-    />
-
-    <!-- Both typefaces preloaded so no layout shift occurs on font swap -->
-    <link
-      rel="preload"
-      href="/fonts/jetbrains-mono-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/bodoni-moda-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/anton-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
-    <link
-      rel="preload"
-      href="/fonts/inter-latin.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-    />
+    <!-- Anton draws the wordmark at ~300px, so it is fetched with the
+         document rather than discovered when the stylesheet parses. The
+         other three carry everything else on the page. -->
+    <link rel="preload" href="/fonts/anton-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/instrument-serif-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/space-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
   </head>
   <body>
     <div id="root"></div>

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Cover } from '../components/Cover/Cover';
+import { Hero } from '../sections/Hero/Hero';
 import { Work } from '../sections/Work/Work';
 import { Stack } from '../sections/Stack/Stack';
 import { About } from '../sections/About/About';
@@ -29,7 +29,7 @@ export function Home({ reduced }: { reduced: boolean }) {
 
   return (
     <main id="main">
-      <Cover reduced={reduced} />
+      <Hero reduced={reduced} />
       <Work reduced={reduced} />
       <Stack reduced={reduced} />
       <About reduced={reduced} />

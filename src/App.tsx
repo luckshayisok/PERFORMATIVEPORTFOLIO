@@ -43,14 +43,6 @@ function Shell({ reduced }: { reduced: boolean }) {
         Skip to content
       </a>
 
-      <div className="grid-overlay" aria-hidden="true">
-        <div className="grid-overlay__inner">
-          {Array.from({ length: 12 }, (_, i) => (
-            <span key={i} />
-          ))}
-        </div>
-      </div>
-
       <Header reduced={reduced} />
 
       <Suspense fallback={null}>

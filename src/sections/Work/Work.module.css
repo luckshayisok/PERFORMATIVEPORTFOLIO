@@ -1,7 +1,178 @@
-/* The chapter is the poster: the crowd carries the index, so there is no
-   row list and no counter under it any more. */
+/* ============================================================
+   PLATE 01 — THE WORK
+   A plain grid. Every card is the same shape, every image sits in
+   the same 4:3 frame, and all of them share the page's edges.
+   ============================================================ */
+
 .section {
+  padding-block: var(--step);
+}
+
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: clamp(32px, 4vw, 52px);
+}
+
+.note {
+  font-family: var(--sans);
+  font-size: clamp(14px, 1.1vw, 16px);
+  line-height: 1.6;
+  color: var(--fg-dim);
+  max-width: 54ch;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(30px, 3.4vw, 50px) clamp(20px, 2.4vw, 36px);
+}
+
+/* the card is the positioning context for the stretched title link */
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* one frame for every card, whether it holds a photograph or a plate,
+   so the grid keeps a single baseline across the row */
+.frame {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--paper-2);
+  border: 1px solid var(--rule-soft);
+  margin-bottom: 4px;
+}
+
+.frame picture {
+  display: block;
+  height: 100%;
+}
+
+.shot {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.5s var(--ease);
+}
+
+.frame > div {
+  height: 100%;
+}
+
+.frame :global(svg) {
+  height: 100%;
+  border: 0;
+  aspect-ratio: auto;
+}
+
+.card:hover .shot {
+  transform: scale(1.02);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  font-family: var(--mono);
+  font-size: var(--mono-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+.name {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(22px, 2.3vw, 30px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+}
+
+/* the whole card opens the detail page; the two buttons below sit on
+   top of this overlay so they stay separately clickable */
+.nameLink::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.nameLink:hover,
+.nameLink:focus-visible {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+}
+
+.tagline {
+  font-family: var(--sans);
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--fg-mid);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+.tag {
+  font-family: var(--mono);
+  font-size: var(--mono-xs);
+  letter-spacing: 0.06em;
+  color: var(--fg-dim);
+  border: 1px solid var(--rule-soft);
+  padding: 3px 7px;
+}
+
+.links {
   position: relative;
   z-index: 2;
-  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.linkBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: var(--mono-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 7px 12px;
+  border: 1.5px solid var(--ink);
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.linkBtn:hover,
+.linkBtn:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+@media (max-width: 1040px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 44px;
+  }
 }

@@ -1,102 +1,92 @@
-import { profile, chapters } from '../../data/site';
-import { RevealText } from '../../components/RevealText';
-import { ScrambleCode } from '../../components/ScrambleCode';
-import { useMagnetic } from '../../lib/useMagnetic';
+import { useRef } from 'react';
+import { chapters, profile } from '../../data/site';
+import { gsap, useGSAP } from '../../lib/gsap';
 import styles from './Contact.module.css';
 
+const YEAR = new Date().getFullYear();
+
+/**
+ * Plate 04 — off the clock.
+ *
+ * The three ways to reach me, and a colophon that says plainly how the
+ * drawings on this page were made.
+ */
 export function Contact({ reduced }: { reduced: boolean }) {
-  const year = new Date().getFullYear();
-  const bookRef = useMagnetic<HTMLAnchorElement>(0.22, reduced);
+  const scope = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      if (reduced) return;
+      gsap.from(`.${styles.row}`, {
+        y: 22,
+        opacity: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+        stagger: 0.08,
+        scrollTrigger: { trigger: scope.current, start: 'top 76%', once: true },
+      });
+    },
+    { scope, dependencies: [reduced] },
+  );
 
   return (
     <section
       id="contact"
-      className={`${styles.section} surface-paper`}
+      ref={scope}
+      className={styles.section}
       aria-labelledby="contact-title"
     >
       <div className="shell">
-        <p className={styles.chapter}>
-          {chapters.contact.no} / {chapters.contact.title}
-        </p>
-
-        <div className={styles.head}>
-          <span className={styles.headCode}>
-            <ScrambleCode text="CTC" reduced={reduced} />
+        <header className={styles.head}>
+          <span className="chapter">
+            {chapters.contact.no} / {chapters.contact.title}
           </span>
-          <span className={styles.headCount}>CTC 09-26-01</span>
-        </div>
+          <h2 id="contact-title" className={styles.title}>
+            Say hello.
+          </h2>
+        </header>
 
-        <RevealText
-          as="h2"
-          className={`${styles.title} display`}
-          stagger={0.08}
-          reduced={reduced}
-        >
-          Got something that only breaks on real machines?
-        </RevealText>
-        <span id="contact-title" className="sr-only">
-          Contact
-        </span>
-
-        <ul className={styles.links}>
-          <li className={styles.linkRow}>
-            <span className={styles.linkLabel}>Email</span>
-            <a
-              className={styles.link}
-              href={`mailto:${profile.email}`}
-              data-cursor="hover"
-            >
-              {profile.emailDisplay}
+        <ul className={styles.rows}>
+          <li className={styles.row}>
+            <span className={styles.label}>Email</span>
+            <a className={styles.value} href={`mailto:${profile.email}`}>
+              {profile.email}
             </a>
           </li>
-          <li className={styles.linkRow}>
-            <span className={styles.linkLabel}>Phone</span>
-            <a
-              className={styles.link}
-              href={`tel:${profile.phone}`}
-              data-cursor="hover"
-            >
+          <li className={styles.row}>
+            <span className={styles.label}>Phone</span>
+            <a className={styles.value} href={`tel:${profile.phone}`}>
               {profile.phoneDisplay}
             </a>
           </li>
-          <li className={styles.linkRow}>
-            <span className={styles.linkLabel}>Code</span>
+          <li className={styles.row}>
+            <span className={styles.label}>GitHub</span>
             <a
-              className={styles.link}
+              className={styles.value}
               href={profile.github}
               target="_blank"
               rel="noreferrer noopener"
-              data-cursor="hover"
             >
               {profile.githubDisplay}
             </a>
           </li>
         </ul>
 
-        <a
-          ref={bookRef}
-          className={`${styles.book} surface-red`}
-          href={`mailto:${profile.email}`}
-          data-cursor="hover"
-        >
-          <span>Start a conversation</span>
-          <span aria-hidden="true" className={styles.bookArrow}>
-            ↗
-          </span>
-        </a>
+        <footer className={styles.colophon}>
+          <p className={styles.note}>
+            The machines above are drawn in the browser from a seeded random
+            sequence — outlines resampled and jittered, shading cross-hatched
+            — and so is every plate on this site. Set in Anton, Instrument
+            Serif, Space Mono and Inter.
+          </p>
+          <p className={styles.sign}>
+            <span>
+              {profile.name} — {profile.location}
+            </span>
+            <span>&copy; {YEAR}</span>
+          </p>
+        </footer>
       </div>
-
-      <footer className={styles.footer}>
-        <div className={`${styles.footerInner} shell`}>
-          <span>
-            © {year} {profile.name}
-          </span>
-          <span className={styles.footerMid}>
-            Built with Vite · React · GSAP · Lenis
-          </span>
-          <span>LKM — {profile.location}</span>
-        </div>
-      </footer>
     </section>
   );
 }

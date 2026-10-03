@@ -19,6 +19,9 @@
 }
 
 .title {
+  font-family: var(--display);
+  font-weight: 400;
+  letter-spacing: -0.02em;
   font-size: clamp(50px, 12vw, 170px);
   line-height: 0.92;
   padding: 32px 0;

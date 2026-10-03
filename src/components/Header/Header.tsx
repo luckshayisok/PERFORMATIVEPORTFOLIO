@@ -115,17 +115,22 @@ export function Header({ reduced }: { reduced: boolean }) {
           <a href="/" className={styles.logo} onClick={handleHome}>
             <span className="sr-only">{`${profile.name} — home`}</span>
             <svg
-              viewBox="0 0 32 32"
+              viewBox="0 0 24 24"
               className={styles.logoMark}
               aria-hidden="true"
               focusable="false"
             >
-              <path d="M4 4h5v19h12v5H4z" fill="currentColor" />
-              <rect x="23" y="4" width="5" height="13" fill="var(--accent)" />
+              <path
+                d="M3 20 L12 4 L21 20 M7.5 14 H16.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+                strokeLinecap="round"
+              />
             </svg>
             <span className={styles.logoText} aria-hidden="true">
-              <span>LKM</span>
-              <span className={styles.logoId}>—01</span>
+              <span>LAKSHYA</span>
+              <span className={styles.logoId}>—26</span>
             </span>
           </a>
 
@@ -189,7 +194,7 @@ export function Header({ reduced }: { reduced: boolean }) {
                   <span className={styles.overlayIndex}>
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <span className="display">{link.label}</span>
+                  <span>{link.label}</span>
                 </a>
               </li>
             ))}

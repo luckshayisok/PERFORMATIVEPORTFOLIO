@@ -1,0 +1,27 @@
+/* A plate is always square and always fills the column it is given, so
+   every plate on the page lines up with the one above it. */
+
+.plate {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
+  /* the plate sits on its own sheet, a shade off the page ground */
+  background: var(--paper-2);
+  border: 1px solid var(--rule-soft);
+}
+
+.caption {
+  font-family: var(--mono);
+  font-size: var(--mono-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
