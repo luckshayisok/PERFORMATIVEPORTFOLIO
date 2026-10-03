@@ -402,3 +402,289 @@ Desktop 100 / 100 / 100 / 100, CLS 0. Mobile performance **93** — still capped
 by a 1.7s First Contentful Paint from client-side rendering, with the cover
 photograph and the work plate loading behind it. `color-contrast`, `link-name`,
 `target-size` and `heading-order` all pass.
+
+---
+
+## PART 7 — CH.02, THE TOOLKIT (THE CRT)
+
+The capabilities section is a photograph of a beige CRT micro, cut out of its
+blue studio backdrop and dropped onto the paper.
+
+**The whole machine is what animates — nothing scrolls inside the screen.**
+The section pins. You arrive zoomed in close enough that the TV fills the view
+and the full skill list is readable on the glass. Keep scrolling and the camera
+pulls back: the machine shrinks, straightens and settles into its place on the
+page, while the list on the glass fades down to the six area headings.
+
+A first version got this backwards — the machine stood still and the list
+rolled up inside the glass. That was a misreading of the brief, not a design
+choice.
+
+### Preparing the plate — `public/skills-crt.png`
+
+The source is a warm object on a flat blue backdrop, which breaks the rule that
+plates need a white ground. It is keyed instead of multiplied:
+
+- The object is warm and the backdrop is blue, so `(b - r) > 14` separates them
+  cleanly.
+- The **cast shadow is also blue**, so keying it away would leave the machine
+  floating. Its alpha is derived from how much darker each pixel is than the
+  backdrop — `(base_lum - lum) / base_lum` — and painted as soft grey.
+- The alpha needs a `MedianFilter(5)` before the blur, or the boundary where
+  the shadow meets the machine speckles into a jagged bite out of the base.
+- The object is desaturated and pushed to 1.35 contrast, because a cream
+  machine on cream paper otherwise disappears.
+
+### The glass
+
+Screen corners measured off the photograph, in the cropped image's space:
+
+```
+TL 43.77% 14.39%   TR 82.40% 10.79%
+BL 45.33% 49.82%   BR 82.09% 44.96%
+```
+
+`.glass` is the screen's own bounding box with the trapezoid applied as a
+`clip-path` inside it. Everything on it is sized in `cqw` off `.machine`, so
+the type scales with the photograph through the entire zoom.
+
+### The zoom — `Stack.tsx`
+
+The close-up is a transform on `.machine`, computed from **layout offsets**
+(`offsetLeft/Top/Width/Height`), never from `getBoundingClientRect` — the
+transform being tweened would otherwise feed back into its own measurement.
+
+- `transform-origin` is set to the centre of the glass, so scale and rotation
+  both pivot about the screen.
+- Scale is `min(vw / glassW, vh / glassH) × 0.94` — the glass fits the view
+  with a sliver of bezel showing, so it still reads as a television.
+- Translation moves the glass centre to the viewport centre.
+- Rotation starts at `+3.4deg` to level the screen, which sits that far off
+  square in the photograph, and eases to `0`.
+- All four are function values recomputed on `refreshInit`, so a resize
+  re-fits the close-up.
+
+The timeline holds on the close-up for the first ~13% of the pin so the list
+can be read, pulls back with `power2.inOut`, fades the chapter marker and
+footer in as it lands, then holds at rest. The section is `overflow: hidden`
+so the 3.5× close-up cannot spill over the neighbouring chapters.
+
+**The listing at close-up is three columns, and width is the binding
+constraint**, not height: three copies of the longest line
+(`> DAT DATA & PERSISTENCE`, 24ch) must fit side by side, which caps the size at
+~0.74cqw. At `0.9cqw` lines ran into the next column and the right column
+clipped. Height has room to spare, so the leading opens up instead.
+
+### Phones and reduced motion
+
+- **Phones:** the zoom still runs, but the glass only ever carries the headings
+  and the full list is printed on the paper below in two columns (one under
+  420px).
+- **Reduced motion:** nothing pins and nothing transforms. The machine sits at
+  rest with the headings on the glass and the list printed below in three
+  columns.
+- The on-screen list and the printed list are never displayed together. The
+  headings layer is `aria-hidden`, since it only summarises the list.
+
+### Verified
+
+Sampled across the pin at 1265×900: at the start the glass centre sits at
+`633, 450` — the exact viewport centre — at 3.47× and 3.4°; it eases through
+3.32 → 2.02 → 1.06 and lands at 1× and 0°, holding at `top: 142`. The list is
+gone by the midpoint and the headings are fully in by 70%. No line collides
+with its neighbouring column or overflows the glass.
+
+On a 375×812 phone the close-up centres the glass at `187, 406` and settles
+from 2.65× to 1×, with all 48 lines printed below and no horizontal overflow.
+
+### Measured after step 3
+
+Desktop 99 / 100 / 100 / 100, CLS 0. Mobile performance **89** — three
+photographic plates on one page, on top of the 1.7s client-render first paint.
+
+---
+
+## PART 8 — CH.03, AFTER HOURS (THE ABOUT POSTER)
+
+Art-directed from a film poster reference. **Only the design language carries
+over** — the reference's photograph is a film still of three actors, and its
+title treatment and dialogue belong to the film, so none of them are used.
+Every word on this poster comes from the bio in `src/data/site.ts`.
+
+### The composition — `src/sections/About/`
+
+- **Wordmark `H0URS`** in Anton, `34cqw` stretched `scaleY(1.95)`, running
+  5%→95% across and ending 45% of the way down.
+- **A figure walking toward the reader**, crossing the bottom of the wordmark,
+  with a long cast shadow leaning down-left.
+- **Seven labels on hairline leader lines**, taken from the bio: session
+  boundaries, system context, exit codes, exec scoping, notification ids,
+  silent installers, small tools. Each is `side: 'left' | 'right' | 'mid'` in
+  `aboutPoster.tags` — left lines run in from the page edge and the label ends
+  where the line does; right lines run from the label out to the edge.
+- **One sentence of the bio stepping down the page** in three fragments, with
+  "real machines" underlined. Screen readers get the whole sentence once from
+  an `sr-only` span; the three positioned fragments are `aria-hidden`, because
+  whitespace between absolutely-positioned pieces is not reliably read.
+- **A credits band**: the first bio paragraph as a justified block; a
+  vertical よる (night) capsule beside Python / Django / ~~Sleep~~ / Rasa; a
+  vertical あと (after) capsule with 仕事のあと (after work) over the "small
+  tools" line; and checkboxes for つくる (build) and やすむ (rest). Japanese
+  text carries `lang="ja"` and an English gloss for assistive tech.
+- The capsules are the **one exception to the no-radius rule**, and need
+  `border-radius: 999px !important` to beat the global `* { border-radius: 0
+  !important }`.
+
+### The figure is a stand-in
+
+`aboutPoster.figure` currently points at the cover photograph. The intended
+image is a photo of Lakshya **walking, full body, shot from above, on a plain
+light floor**. To swap it:
+
+1. Put the photo in `public/` and point `figure.src` / `srcSet` at it.
+2. `python scripts/make_shadow.py public/<photo> public/about-shadow.png` —
+   flood-fills the light backdrop in from the frame edges (so light areas
+   *inside* the figure survive), and writes a soft black silhouette.
+3. Re-run the collision check below; a slimmer figure will cast a slimmer,
+   longer-reading shadow and may free up room.
+
+The figure and its shadow are multiplied onto the paper **as one group** —
+`mix-blend-mode` sits on `.walker`, not the `<img>`. The stand-in's bottom
+edge is a hard frame cut, so the figure fades out over its last 18%.
+
+### Collision rules
+
+Checked with bounding boxes at 1265px wide:
+
+- No label touches the figure.
+- No two pieces of text overlap.
+- The shadow's box ends at 79% and the sentence starts at 80.5% — the sentence
+  was moved down and the figure lifted to 34%, rather than shortening the
+  shadow to nothing.
+- The 003/007 barcode block sits on the **right**, because the shadow leans
+  left and its tail covers the left margin at that height.
+
+### Below 960px
+
+The absolute composition stops and the sheet stacks in flow: chapter,
+wordmark (with `margin-bottom` reserving the space its stretch does not take),
+figure, labels as a wrapped row, the sentence indented in steps, barcode,
+credits. The `cqw` sizes are tuned for a 1200px sheet and all hit their floors
+on a phone, so the dense blocks get a fixed 11px there — the bio block had
+dropped to 8px.
+
+### Known issue
+
+In Anton the digit `0` is nearly indistinguishable from the letter `O`, so
+the wordmark reads as HOURS and the clock-face trick is invisible.
+
+### Also fixed while building this
+
+`Stack.tsx`'s zoom measurement threw when the section was not rendered
+(`offsetParent` is `null` under `display: none`), and a throw inside
+ScrollTrigger's refresh takes down every scroll animation on the page. It now
+returns the last good measurement instead.
+
+### Measured after step 4
+
+Desktop 100 / 100 / 100 / 100, CLS 0. Mobile performance 91.
+`color-contrast`, `heading-order`, `valid-lang`, `image-alt` and `list` pass.
+
+---
+
+## PART 9 — END-TO-END POLISH PASS
+
+A full review of the site: one design system, the portfolio rebuilt from the
+real repositories, dead code removed, and a responsive/accessibility/perf pass.
+
+### One design system
+
+The site had split in two: the cover and chapters were on paper/red, while the
+**header, contact, project detail pages and 404 were still on the original
+ink/orange system**. Everything is now one ground.
+
+- `:root` *is* the paper system — paper ground, ink type, `--accent: var(--red)`.
+  Sections no longer opt into it.
+- `.surface-bone` and `.surface-accent` are gone. The single remaining surface
+  is `.surface-red` (red field, paper type), used by the header CTA, the
+  contact CTA and a hovered work row.
+- The route wipe is press red rather than a black curtain.
+- **Rule that keeps biting: paper on red is 4.91:1, ink on red is 3.2:1.** A red
+  field always takes paper type. The header CTA was ink-on-red and is fixed.
+
+### Typography
+
+Four faces, each with one job:
+
+| Face | Used for |
+|---|---|
+| Anton | poster wordmarks only |
+| Bodoni Moda | headlines and project names |
+| JetBrains Mono | labels, codes, metadata, printed matter |
+| **Inter** | running prose on the project detail pages |
+
+Inter was added in this pass. Detail-page body copy was uppercase monospace,
+which is fine for a label and hard work for a paragraph. It is deliberately
+**not** used on the home page, which is printed matter end to end.
+
+### The portfolio is now real
+
+`lakshya0099` 404s — every repository lives under `luckshayisok`. Nine projects:
+three client (ZerofAI, endpoint automation, Rasa/retrieval — no links, the
+source is not mine to publish) and six personal, each carrying only links that
+were already in the repository metadata:
+
+| Project | Repo | Demo |
+|---|---|---|
+| Zenkai | yes | — |
+| Prepify | yes | prepify-chi.vercel.app |
+| MedAssist | yes | — |
+| Geonix | yes | geonix-beta.vercel.app |
+| Job Monitor | yes | — |
+| Kaizen | yes | kaizen-theta-five.vercel.app |
+
+Every link returns 200. Descriptions are written from each repository's README,
+not invented. Detail pages render a red **Live demo** and an outlined **Source**
+button only when the project actually has them; client work gets a note instead,
+so a card never looks like it is missing a broken link.
+
+**Code Copilot (RAG) was dropped** — it is on the résumé but has no repository,
+so nothing could be linked or verified. Say the word and it goes back as a
+link-less entry.
+
+### Bugs found and fixed
+
+1. **Pins collided with the display type** at 768px (ZRF under the chapter chip,
+   which is a fixed pixel size and so covers a larger share of a smaller plate)
+   and badly at 375px, where the mobile type sits in completely different places.
+2. **Nine chips on a 375px plate** were unreadable and poor tap targets. Pins are
+   now a desktop device; phones get a proper index list under the plate. Only one
+   of the two is ever in the tree.
+3. **Text below the legible minimum** — 11px covered 45% of the text on a phone.
+   The mono scale steps up below 700px, the About poster's hard-coded 11px
+   overrides went to 12px, and the CRT glass (too narrow for full titles at a
+   legible size) shows only the three-letter codes there.
+4. **417 KiB of oversized images.** The CRT was a 403 KB PNG; as WebP with alpha
+   it is 84 KB. Added 1000w plate and 650w portrait steps so a phone stops
+   rounding up to the largest file.
+5. The booking CTA pointed at `cal.com`'s own home page. It is a mailto until a
+   real booking link exists.
+
+### Dead code removed
+
+`src/sections/Hero/` and `src/components/GlyphField/` (replaced by the cover),
+the `aboutList`, `telemetry` and `marquee` exports, and the unused `profile`
+fields `role`, `greeting` and `intro`.
+
+### Measured
+
+| | perf | a11y | best practices | SEO | CLS |
+|---|---|---|---|---|---|
+| Home, desktop | 100 | 100 | 100 | 100 | 0 |
+| Home, mobile | 89 | 100 | 100 | 100 | 0 |
+| Detail, desktop | 100 | 100 | 100 | 100 | 0 |
+
+No console errors. No horizontal scroll at 1440, 1280, 1024, 768, 412 or 375.
+Nine routes plus the SPA fallback resolve. Mobile performance is capped by a
+1.7s first paint — the page is client-rendered, so nothing paints until the
+bundle runs. Prerendering is the fix, and it is its own piece of work.

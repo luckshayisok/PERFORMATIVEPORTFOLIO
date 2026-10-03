@@ -1,208 +1,334 @@
-/* chapter marker — the site reads as a story, so every section says
-   where in it you are */
-.chapter {
-  font-family: var(--mono);
-  font-size: var(--mono-xs);
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  /* the bone ground does not redefine --accent, and that orange only makes
-     2.69:1 here, so this chapter marker is a filled chip like the code is */
-  color: var(--ink);
-  background: var(--accent);
-  align-self: flex-start;
-  width: fit-content;
-  padding: 4px 9px;
-  margin-bottom: clamp(10px, 1.4vw, 18px);
-}
+/* ============================================================
+   CH.02 — THE TOOLKIT
+   A cut-out of the supplied machine on the paper. The section
+   opens zoomed into the TV and pulls back until the machine
+   settles into its place on the page. Nothing scrolls inside
+   the screen — the whole machine is what animates.
+   ============================================================ */
 
 .section {
   position: relative;
   z-index: 2;
-  padding: clamp(80px, 11vw, 160px) 0 clamp(64px, 9vw, 130px);
-}
-
-.head {
+  min-height: 100svh;
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 24px;
-  padding-bottom: 22px;
-  border-bottom: 1px solid var(--rule);
-}
-
-.headTitle {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  font-family: var(--mono);
-  font-size: var(--mono-sm);
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-/* on the bone ground the accent only reaches 2.69:1 as text, so the code
-   becomes a filled chip with ink type instead */
-.headCode {
-  background: var(--accent);
-  color: var(--ink);
-  padding: 3px 9px;
-}
-
-.headCount {
-  font-family: var(--mono);
-  font-size: var(--mono-xs);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--fg-dim);
-}
-
-/* ---------- row ---------- */
-
-.row {
-  padding: clamp(24px, 3vw, 38px) 0 clamp(18px, 2vw, 26px);
-}
-
-.row + .row {
-  border-top: 1px solid var(--rule);
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 168px minmax(0, 1fr) minmax(0, 1fr);
-  gap: 24px;
-  align-items: start;
-}
-
-.colCode {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  padding: clamp(56px, 7vw, 96px) var(--gutter);
+  /* the close-up is several times larger than the section, so it is
+     clipped to it rather than spilling over the chapters either side */
   overflow: hidden;
 }
 
-/* the code carries the row, at the same weight as the title */
-.code {
+.inner {
+  position: relative;
+  width: 100%;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(16px, 2.2vw, 28px);
+}
+
+.chapter {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
   font-family: var(--mono);
-  font-size: clamp(26px, 2.4vw, 40px);
+  font-size: var(--mono-xs);
   font-weight: 500;
-  line-height: 1;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ---------- the machine ---------- */
+
+.machine {
+  position: relative;
+  z-index: 2;
+  /* sized so the machine, the chapter marker and the footer all fit on one
+     screen once it has settled — the section is pinned while it lands */
+  width: min(100%, 720px, calc((100svh - 270px) * 1.15));
+  /* everything on the glass is sized off the machine, so it scales with the
+     photograph through the whole zoom */
+  container-type: inline-size;
+}
+
+.machine picture {
+  display: block;
+}
+
+.crt {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* ---------- the glass ----------
+   The box is the screen's own bounding rect inside the photograph; the
+   polygon trims it to the trapezoid the screen makes in perspective. */
+
+.glass {
+  position: absolute;
+  left: 43.77%;
+  top: 10.79%;
+  width: 38.63%;
+  height: 39.03%;
+  clip-path: polygon(0% 9.22%, 100% 0%, 99.2% 87.55%, 4.04% 100%);
+  background: rgba(18, 22, 14, 0.55);
+  overflow: hidden;
+}
+
+/* both layers sit on the screen a few degrees off square, as it does in
+   the photograph */
+.screenList,
+.screenHeadings {
+  position: absolute;
+  transform-origin: top left;
+  rotate: -3.4deg;
+  font-family: var(--mono);
+  text-transform: uppercase;
+  color: #eae6dc;
+}
+
+/* full listing — sized to be read while the TV fills the view.
+   Width is the binding constraint: three columns of the longest line
+   ("> DAT DATA & PERSISTENCE", 24ch) have to fit side by side, which caps
+   the size at ~0.74cqw. Height has room to spare, so the leading opens up
+   instead. */
+.screenList {
+  left: 6%;
+  top: 13%;
+  width: 89%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 1.2em;
+  row-gap: 2em;
+  font-size: 0.72cqw;
+  line-height: 1.75;
+  letter-spacing: 0.02em;
+}
+
+/* area headings — sized to be read once the machine has settled */
+.screenHeadings {
+  left: 7%;
+  top: 15%;
+  width: 88%;
+  display: flex;
+  flex-direction: column;
+  font-size: 1.75cqw;
+  line-height: 1.7;
   letter-spacing: 0.04em;
-  display: block;
 }
 
-.id {
-  font-family: var(--mono);
-  font-size: var(--mono-xs);
-  letter-spacing: 0.18em;
-  color: var(--fg-dim);
-  display: block;
-  padding-top: 6px;
-}
-
-.title {
-  font-size: clamp(32px, 4.2vw, 74px);
-  line-height: 0.96;
-  letter-spacing: -0.028em;
-  overflow: hidden;
-  display: block;
-}
-
-.reveal {
-  will-change: transform;
-}
-
-/* ---------- two tag columns ---------- */
-
-.cols {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-.col {
+.block {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  min-width: 0;
 }
 
-.tagWrap {
-  overflow: hidden;
-  line-height: 1.5;
+.lineHead {
+  display: flex;
+  align-items: baseline;
+  gap: 0.55em;
+  white-space: nowrap;
+  color: #f4f1e8;
 }
 
-.tagA,
-.tagB {
-  display: block;
+.prompt,
+.headCode {
+  color: var(--red-ink);
+}
+
+.lineItem {
+  padding-left: 1.4em;
+  white-space: nowrap;
+  color: rgba(234, 230, 220, 0.84);
+}
+
+.lineFlow {
+  padding-left: 1.4em;
+  white-space: nowrap;
+  color: rgba(234, 230, 220, 0.6);
+}
+
+.caret {
+  display: inline-block;
+  width: 0.62em;
+  height: 1em;
+  background: #f4f1e8;
+  animation: blink 1.05s steps(1, end) infinite;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ---------- glass treatments ---------- */
+
+.scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.3) 0 1px,
+    transparent 1px 3px
+  );
+  opacity: 0.45;
+}
+
+.glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    120% 90% at 22% 8%,
+    rgba(255, 255, 255, 0.16) 0%,
+    rgba(255, 255, 255, 0.04) 38%,
+    transparent 62%
+  );
+}
+
+/* ---------- the printed list ----------
+   Used on phones and under reduced motion, where 61 lines cannot live on
+   the glass. Only one of this and .screenList is ever displayed. */
+
+.printed {
+  display: none;
+  width: 100%;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 18px;
+  font-family: var(--mono);
+  font-size: var(--mono-xs);
+  line-height: 1.6;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.printed .lineHead {
+  color: var(--fg);
+  white-space: normal;
+}
+
+.printed .prompt,
+.printed .headCode {
+  color: var(--red);
+}
+
+.printed .lineItem {
+  color: var(--fg-mid);
+  white-space: normal;
+}
+
+.printed .lineFlow {
+  color: var(--fg-dim);
+  white-space: normal;
+}
+
+/* ---------- printed matter ---------- */
+
+.footer {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  color: var(--red);
+}
+
+.barcode {
+  width: clamp(64px, 7vw, 92px);
+  height: 26px;
+  color: var(--red);
+}
+
+.footerText {
+  display: flex;
+  flex-direction: column;
   font-family: var(--mono);
   font-size: var(--mono-xs);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--fg-mid);
-  will-change: transform;
+  line-height: 1.35;
 }
 
-/* ---------- spectrum arrow ---------- */
+/* ---------- motion defaults on wide screens ----------
+   The timeline fades the headings in as the machine lands; before it runs
+   they start hidden so the two layers never overlap. */
 
-.spectrum {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-top: clamp(20px, 2.6vw, 34px);
-  color: var(--fg-mid);
+@media (min-width: 701px) {
+  .screenHeadings {
+    opacity: 0;
+  }
 }
 
-.endpoint {
-  font-family: var(--mono);
-  font-size: var(--mono-md);
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  color: var(--fg);
-  flex: none;
+/* ---------- phones ----------
+   The zoom still runs, but the glass only ever carries the headings and the
+   full list is printed on the paper below. */
+
+@media (max-width: 700px) {
+  .machine {
+    width: min(100%, 560px);
+  }
+  .screenList {
+    display: none;
+  }
+  /* the glass is ~132px wide here: a full title cannot be set above the
+     legible minimum, so only the codes stay on screen */
+  .screenHeadings {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .screenHeadings .headTitle {
+    display: none;
+  }
+  .printed {
+    display: grid;
+  }
 }
 
-.arrowSvg {
-  flex: 1 1 auto;
-  height: 10px;
-  min-width: 40px;
+@media (max-width: 420px) {
+  .printed {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---------- reduced motion ----------
+   Nothing pins and nothing zooms: the machine sits at rest with the
+   headings on the glass, and the full list is printed below. */
+
+.isStatic {
+  min-height: 0;
   overflow: visible;
 }
 
-.arrowLine {
-  will-change: stroke-dashoffset;
+.isStatic .screenList {
+  display: none;
 }
 
-.arrowHead {
-  flex: none;
-  margin-left: -12px;
-  will-change: transform;
+.isStatic .screenHeadings {
+  opacity: 1;
 }
 
-/* ---------- responsive ---------- */
+.isStatic .printed {
+  display: grid;
+}
 
-@media (max-width: 1000px) {
-  .grid {
-    grid-template-columns: 136px minmax(0, 1fr);
-  }
-  .cols {
-    grid-column: 1 / -1;
-    padding-top: 6px;
+@media (min-width: 701px) {
+  .isStatic .printed {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 640px) {
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  .colCode {
-    flex-direction: row;
-    align-items: baseline;
-    gap: 10px;
-  }
-  .cols {
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
+.isStatic .caret {
+  animation: none;
 }

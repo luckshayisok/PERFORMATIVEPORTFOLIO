@@ -11,7 +11,7 @@ export function Contact({ reduced }: { reduced: boolean }) {
   return (
     <section
       id="contact"
-      className={styles.section}
+      className={`${styles.section} surface-paper`}
       aria-labelledby="contact-title"
     >
       <div className="shell">
@@ -75,13 +75,11 @@ export function Contact({ reduced }: { reduced: boolean }) {
 
         <a
           ref={bookRef}
-          className={`${styles.book} surface-accent`}
-          href={profile.callUrl}
-          target="_blank"
-          rel="noreferrer noopener"
+          className={`${styles.book} surface-red`}
+          href={`mailto:${profile.email}`}
           data-cursor="hover"
         >
-          <span>Book a video call</span>
+          <span>Start a conversation</span>
           <span aria-hidden="true" className={styles.bookArrow}>
             ↗
           </span>

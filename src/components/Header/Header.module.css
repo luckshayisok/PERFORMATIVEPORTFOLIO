@@ -152,10 +152,11 @@
   color: var(--accent);
 }
 
-/* the CTA is a solid accent block, not an outline */
+/* the CTA is a solid red block. Ink on red is only 3.2:1, so it takes
+   paper type. */
 .cta {
-  background: var(--accent);
-  color: var(--ink);
+  background: var(--red);
+  color: var(--paper);
   padding: 11px 18px;
   will-change: transform;
 }

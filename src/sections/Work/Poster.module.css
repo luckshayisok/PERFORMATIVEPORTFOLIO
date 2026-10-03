@@ -220,9 +220,9 @@
 }
 
 .pinCode {
-  /* a comfortable tap target even at the smallest plate size */
+  /* a comfortable pointer target: 44px square rather than the 24px minimum */
   min-width: 44px;
-  padding: 9px 10px;
+  padding: 14px 12px;
   text-align: center;
 }
 
@@ -290,18 +290,62 @@
   .edition {
     bottom: 3.5%;
   }
-  /* no hover on touch, so the names never open and the pins never dim */
-  .pins:hover .pin,
-  .pins:focus-within .pin {
-    opacity: 1;
-  }
-  .pinCode {
-    min-width: 40px;
-    padding: 8px 8px;
+  /* Nine chips pinned to faces on a 375px-wide plate collide with the display
+     type and give unreadable labels, so the plate stays a plain picture here
+     and the index below takes over. */
+  .pins {
+    display: none;
   }
   .mark {
     width: 26px;
     height: 26px;
     padding: 5px;
+  }
+}
+
+/* ---------- the index under the plate ----------
+   Phones only: the same nine projects as the pins, as a readable list. */
+
+.index {
+  display: none;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--rule);
+}
+
+.indexRow {
+  display: grid;
+  grid-template-columns: 3.4em minmax(0, 1fr) auto auto;
+  align-items: baseline;
+  gap: 12px;
+  padding: 16px var(--gutter);
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: var(--mono-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fg);
+}
+
+.indexCode {
+  font-weight: 500;
+  color: var(--red);
+}
+
+.indexName {
+  font-family: var(--display);
+  font-size: 22px;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+.indexLabel {
+  color: var(--fg-dim);
+}
+
+@media (max-width: 700px) {
+  .index {
+    display: block;
   }
 }

@@ -15,6 +15,19 @@
     U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215;
 }
 
+/* Inter — the reading face. Labels, codes and metadata stay monospace and
+   headlines stay in the display faces; Inter carries running prose, which
+   uppercase mono was making hard work of. */
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-latin.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215;
+}
+
 /* the cover wordmark — a heavy condensed grotesque, used ONLY there */
 @font-face {
   font-family: 'Anton';
@@ -40,32 +53,33 @@
 }
 
 :root {
-  /* palette — near monochrome, single accent used at full field strength */
-  --ink: #0b0b0b;
-  --bone: #ece7de;
-  --accent: #ff4d1c;
-  /* cover palette — printed paper and press red */
+  /* ONE palette for the whole site: printed paper, press red, photo ink.
+     Every chapter is printed matter, so paper is the default ground rather
+     than something individual sections opt into. */
   --paper: #e8e4dd;
+  --ink: #0b0b0b;
   /* --red is the only one safe for small print: it measures 4.91:1 on the
      paper. --red-ink matches the red in the cover photograph but only reaches
-     3.3:1, so it is reserved for the masthead, where the large-text
+     3.3:1, so it is reserved for display sizes, where the large-text
      threshold of 3:1 applies. */
   --red: #c1121f;
   --red-ink: #f02726;
+  --accent: var(--red);
 
-  --bg: var(--ink);
-  --fg: var(--bone);
-  /* both clear 4.5:1 against --bg, checked with Lighthouse/axe */
-  --fg-mid: rgba(236, 231, 222, 0.78);
-  --fg-dim: rgba(236, 231, 222, 0.58);
-  --rule: rgba(236, 231, 222, 0.16);
-  --rule-soft: rgba(236, 231, 222, 0.08);
+  --bg: var(--paper);
+  --fg: #131313;
+  /* both clear 4.5:1 against the paper, checked with Lighthouse/axe */
+  --fg-mid: rgba(19, 19, 19, 0.8);
+  --fg-dim: rgba(19, 19, 19, 0.66);
+  --rule: rgba(19, 19, 19, 0.28);
+  --rule-soft: rgba(19, 19, 19, 0.12);
 
   /* type */
   --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas,
     monospace;
   --display: 'Bodoni Moda', 'Times New Roman', Times, serif;
   --cond: 'Anton', 'Arial Narrow', 'Haettenschweiler', sans-serif;
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
 
   /* rhythm */
   --baseline: 24px;
@@ -86,33 +100,26 @@
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 
-  color-scheme: dark;
+  color-scheme: light;
 }
 
-/* ---------- surface inversions ----------
-   Both flip the token set rather than restating colours, so every child
-   picks up the new ground automatically. Alpha values re-tuned per ground
-   so the de-emphasised text still clears 4.5:1. */
+/* ---------- surfaces ----------
+   A surface flips the whole token set rather than restating colours, so every
+   child re-colours on its own. Alphas are tuned per ground so de-emphasised
+   text still clears 4.5:1.
 
-.surface-bone {
-  --bg: var(--bone);
-  --fg: var(--ink);
-  --fg-mid: rgba(11, 11, 11, 0.78);
-  --fg-dim: rgba(11, 11, 11, 0.62);
-  --rule: rgba(11, 11, 11, 0.22);
-  --rule-soft: rgba(11, 11, 11, 0.1);
-  background: var(--bg);
-  color: var(--fg);
-}
+   Paper is the default, so `.surface-paper` only ever restates it — it stays
+   because the posters set their own ground explicitly for blend modes. */
 
-/* bone on accent only reaches 2.7:1, so accent fields always take ink text */
-.surface-accent {
-  --bg: var(--accent);
-  --fg: var(--ink);
-  --fg-mid: rgba(11, 11, 11, 0.82);
-  --fg-dim: rgba(11, 11, 11, 0.68);
-  --rule: rgba(11, 11, 11, 0.26);
-  --rule-soft: rgba(11, 11, 11, 0.14);
+/* red field, paper type. Paper on red is 4.91:1; ink on red is only 3.2:1,
+   so a red field always takes paper type, never ink. */
+.surface-red {
+  --bg: var(--red);
+  --fg: var(--paper);
+  --fg-mid: var(--paper);
+  --fg-dim: rgba(232, 228, 221, 0.92);
+  --rule: rgba(232, 228, 221, 0.4);
+  --rule-soft: rgba(232, 228, 221, 0.2);
   background: var(--bg);
   color: var(--fg);
 }
@@ -132,10 +139,17 @@
   color: var(--fg);
 }
 
-/* on an inverted ground the accent has to become the ink colour instead */
-.surface-bone .on-accent,
-.surface-accent .on-accent {
-  color: var(--fg);
+
+
+/* On a phone the label scale is the majority of the text on screen, and
+   11px is below the legible-size threshold. The whole mono scale steps up
+   rather than patching individual components. */
+@media (max-width: 700px) {
+  :root {
+    --mono-xs: 12px;
+    --mono-sm: 13px;
+    --mono-md: 15px;
+  }
 }
 
 *,
@@ -224,8 +238,8 @@ video {
 }
 
 ::selection {
-  background: var(--accent);
-  color: #0b0b0b;
+  background: var(--red);
+  color: var(--paper);
 }
 
 /* ---------- shared type classes ---------- */
@@ -308,8 +322,8 @@ video {
   left: var(--gutter);
   top: -100px;
   z-index: 200;
-  background: var(--accent);
-  color: #0b0b0b;
+  background: var(--red);
+  color: var(--paper);
   padding: 10px 16px;
   font-family: var(--mono);
   font-size: var(--mono-sm);

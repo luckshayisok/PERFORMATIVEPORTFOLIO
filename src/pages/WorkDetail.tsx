@@ -136,6 +136,42 @@ export function WorkDetail({ reduced }: { reduced: boolean }) {
                 </span>
               ))}
             </div>
+
+            {/* only ever rendered when the project actually has the link */}
+            {(item.repo || item.demo) && (
+              <div className={styles.links}>
+                {item.demo && (
+                  <a
+                    className={`${styles.linkBtn} ${styles.linkPrimary}`}
+                    href={item.demo}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    data-cursor="hover"
+                  >
+                    <span>Live demo</span>
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                )}
+                {item.repo && (
+                  <a
+                    className={styles.linkBtn}
+                    href={item.repo}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    data-cursor="hover"
+                  >
+                    <span>Source</span>
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                )}
+              </div>
+            )}
+
+            {item.label === 'CLIENT' && (
+              <p className={styles.clientNote}>
+                Client work — the source is not mine to publish.
+              </p>
+            )}
           </div>
         </div>
 

@@ -138,6 +138,35 @@ export function Poster({ reduced }: { reduced: boolean }) {
           />
         </svg>
       </div>
+
+      {/* On a phone the plate is only as wide as the screen, so pinning nine
+          chips to faces gives unreadable labels and poor tap targets. The
+          pins are hidden there and the same projects are listed underneath
+          instead — only one of the two is ever in the DOM-visible tree. */}
+      <ul className={styles.index}>
+        {workPoster.pins.map((pin) => {
+          const item = work.find((w) => w.slug === pin.slug);
+          if (!item) return null;
+          return (
+            <li key={pin.slug}>
+              <a
+                className={styles.indexRow}
+                href={`/work/${item.slug}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  go(`/work/${item.slug}`);
+                }}
+              >
+                <span className={styles.indexCode}>{item.code}</span>
+                <span className={styles.indexName}>{item.name}</span>
+                <span className={styles.indexLabel}>{item.label}</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+
     </div>
   );
 }

@@ -1,116 +1,170 @@
 import { useRef } from 'react';
-import { stack, chapters } from '../../data/site';
-import { gsap, useGSAP } from '../../lib/gsap';
-import { ScrambleCode } from '../../components/ScrambleCode';
+import { chapters, stack } from '../../data/site';
+import { gsap, useGSAP, ScrollTrigger } from '../../lib/gsap';
+import { Barcode } from '../../components/Cover/Barcode';
 import styles from './Stack.module.css';
 
-function SpectrumArrow({ from, to }: { from: string; to: string }) {
+/** The capability blocks, set as terminal output. */
+function SkillBlocks({ className }: { className: string }) {
   return (
-    <div className={styles.spectrum} aria-hidden="true">
-      <span className={styles.endpoint}>{from}</span>
-      <svg
-        className={styles.arrowSvg}
-        viewBox="0 0 100 10"
-        preserveAspectRatio="none"
-        focusable="false"
-      >
-        <line
-          className={styles.arrowLine}
-          x1="0"
-          y1="5"
-          x2="99"
-          y2="5"
-          pathLength={1}
-          stroke="currentColor"
-          strokeWidth="0.4"
-          vectorEffect="non-scaling-stroke"
-        />
-      </svg>
-      <svg
-        className={styles.arrowHead}
-        viewBox="0 0 8 10"
-        width="8"
-        height="10"
-        focusable="false"
-      >
-        <path d="M0 0 8 5 0 10z" fill="currentColor" />
-      </svg>
-      <span className={styles.endpoint}>{to}</span>
+    <div className={className}>
+      {stack.map((row) => (
+        <div key={row.code} className={styles.block}>
+          <span className={styles.lineHead}>
+            <span className={styles.prompt}>&gt;</span>
+            <span className={styles.headCode}>{row.code}</span>
+            {row.title}
+          </span>
+          {[...row.colA, ...row.colB].map((t) => (
+            <span key={t} className={styles.lineItem}>
+              {t}
+            </span>
+          ))}
+          <span className={styles.lineFlow}>
+            {row.from} ──▸ {row.to}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
 
+/**
+ * The toolkit chapter.
+ *
+ * The machine is a cut-out of the supplied photograph, dropped onto the paper.
+ * You scroll in close enough that the TV fills the view and the full skill
+ * list is readable on it. Keep scrolling and the camera pulls back: the
+ * machine shrinks, straightens and settles into its place on the page, while
+ * the list on the glass fades down to the six area headings.
+ *
+ * Nothing moves inside the screen. The whole machine is what animates.
+ */
 export function Stack({ reduced }: { reduced: boolean }) {
   const scope = useRef<HTMLElement>(null);
+  const machine = useRef<HTMLDivElement>(null);
+  const glass = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      const rows = gsap.utils.toArray<HTMLElement>(`.${styles.row}`);
+      const section = scope.current;
+      const m = machine.current;
+      const g = glass.current;
+      if (reduced || !section || !m || !g) return;
 
-      if (reduced) {
-        gsap.set(`.${styles.tagA}, .${styles.tagB}`, {
-          opacity: 1,
-          yPercent: 0,
-        });
-        gsap.set(`.${styles.arrowLine}`, { strokeDashoffset: 0 });
-        gsap.set(`.${styles.arrowHead}`, { opacity: 1 });
-        return;
-      }
+      const mm = gsap.matchMedia();
 
-      rows.forEach((row) => {
-        const above = row.querySelectorAll(`.${styles.tagA}`);
-        const below = row.querySelectorAll(`.${styles.tagB}`);
-        const line = row.querySelector(`.${styles.arrowLine}`);
-        const head = row.querySelector(`.${styles.arrowHead}`);
-        const title = row.querySelectorAll(`.${styles.reveal}`);
+      mm.add(
+        { wide: '(min-width: 701px)', narrow: '(max-width: 700px)' },
+        (ctx) => {
+          const { wide } = ctx.conditions as { wide: boolean };
 
-        gsap.set(above, { opacity: 0, yPercent: -140 });
-        gsap.set(below, { opacity: 0, yPercent: 140 });
-        gsap.set(title, { opacity: 0, yPercent: 70 });
-        gsap.set(line, { strokeDasharray: 1, strokeDashoffset: 1 });
-        gsap.set(head, { opacity: 0, xPercent: -60 });
+          /* Where the glass sits when the machine is at rest, and the
+             transform that puts it in the middle of the viewport instead.
+             Offsets are layout values, so the transform being tweened never
+             feeds back into the measurement. */
+          let last = { ox: 0, oy: 0, s: 1, tx: 0, ty: 0 };
+          const measure = () => {
+            const vw = document.documentElement.clientWidth;
+            const vh = window.innerHeight;
+            const inner = m.offsetParent as HTMLElement | null;
+            // not rendered (display: none somewhere above it) — there is
+            // nothing to measure, and throwing here would take down every
+            // ScrollTrigger on the page mid-refresh
+            if (!inner) return last;
+            const mx = inner.offsetLeft + m.offsetLeft;
+            const my = inner.offsetTop + m.offsetTop;
+            const gw = g.offsetWidth;
+            const gh = g.offsetHeight;
+            if (!gw || !gh) return last;
+            const ox = g.offsetLeft + gw / 2;
+            const oy = g.offsetTop + gh / 2;
+            last = {
+              ox,
+              oy,
+              // fit the glass to the view with a sliver of bezel showing, so
+              // it still reads as a television rather than a black page
+              s: Math.min(vw / gw, vh / gh) * 0.94,
+              tx: vw / 2 - (mx + ox),
+              ty: vh / 2 - (my + oy),
+            };
+            return last;
+          };
 
-        const tl = gsap.timeline({
-          scrollTrigger: { trigger: row, start: 'top 84%', once: true },
-        });
+          let geo = measure();
+          const applyOrigin = () =>
+            gsap.set(m, { transformOrigin: `${geo.ox}px ${geo.oy}px` });
+          applyOrigin();
 
-        tl.to(title, {
-          opacity: 1,
-          yPercent: 0,
-          duration: 0.7,
-          ease: 'power3.out',
-          stagger: 0.05,
-        })
-          .to(
-            above,
-            {
-              opacity: 1,
-              yPercent: 0,
-              duration: 0.7,
-              ease: 'power3.out',
-              stagger: 0.06,
+          const onRefreshInit = () => {
+            geo = measure();
+            applyOrigin();
+          };
+          ScrollTrigger.addEventListener('refreshInit', onRefreshInit);
+
+          const tl = gsap.timeline({
+            defaults: { ease: 'none' },
+            scrollTrigger: {
+              trigger: section,
+              start: 'top top',
+              end: () => `+=${Math.round(window.innerHeight * 1.6)}`,
+              pin: true,
+              scrub: 0.8,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
             },
-            '<0.05',
-          )
-          .to(
-            below,
+          });
+
+          // a beat on the close-up first, so the list can actually be read
+          tl.fromTo(
+            m,
             {
-              opacity: 1,
-              yPercent: 0,
-              duration: 0.7,
-              ease: 'power3.out',
-              stagger: 0.06,
+              x: () => geo.tx,
+              y: () => geo.ty,
+              scale: () => geo.s,
+              // the screen is a few degrees off square in the photograph —
+              // level it for the close-up, let it settle back as it lands
+              rotation: 3.4,
             },
-            '<',
-          )
-          // the arrow draws itself
-          .to(
-            line,
-            { strokeDashoffset: 0, duration: 0.9, ease: 'power2.inOut' },
-            '<0.1',
-          )
-          .to(head, { opacity: 1, xPercent: 0, duration: 0.35, ease: 'power2.out' }, '-=0.2');
-      });
+            {
+              x: 0,
+              y: 0,
+              scale: 1,
+              rotation: 0,
+              ease: 'power2.inOut',
+              duration: 1,
+            },
+            0.18,
+          );
+
+          if (wide) {
+            tl.fromTo(
+              `.${styles.screenList}`,
+              { opacity: 1 },
+              { opacity: 0, duration: 0.34 },
+              0.3,
+            ).fromTo(
+              `.${styles.screenHeadings}`,
+              { opacity: 0 },
+              { opacity: 1, duration: 0.34 },
+              0.62,
+            );
+          }
+
+          tl.fromTo(
+            [`.${styles.chapter}`, `.${styles.footer}`],
+            { opacity: 0, y: 16 },
+            { opacity: 1, y: 0, duration: 0.3 },
+            0.92,
+          ).to({}, { duration: 0.2 });
+
+          return () => {
+            ScrollTrigger.removeEventListener('refreshInit', onRefreshInit);
+          };
+        },
+      );
+
+      return () => mm.revert();
     },
     { scope, dependencies: [reduced] },
   );
@@ -119,65 +173,80 @@ export function Stack({ reduced }: { reduced: boolean }) {
     <section
       id="stack"
       ref={scope}
-      className={`${styles.section} surface-bone`}
+      className={`${styles.section} surface-paper ${
+        reduced ? styles.isStatic : ''
+      }`}
       aria-labelledby="stack-title"
     >
-      <div className="shell">
-        <p className={styles.chapter}>
+      <div className={styles.inner}>
+        <span className={styles.chapter}>
           {chapters.stack.no} / {chapters.stack.title}
-        </p>
+        </span>
 
-        <div className={styles.head}>
-          <h2 id="stack-title" className={styles.headTitle}>
-            <span className={styles.headCode}>
-              <ScrambleCode text="STK" reduced={reduced} />
-            </span>
-            <span>Capabilities</span>
-          </h2>
-          <span className={styles.headCount}>
-            {String(stack.length).padStart(2, '0')} areas
-          </span>
+        <h2 id="stack-title" className="sr-only">
+          {`Capabilities — ${chapters.stack.no}, ${chapters.stack.title}`}
+        </h2>
+
+        <div ref={machine} className={styles.machine}>
+          <picture>
+            <source
+              srcSet="/skills-crt-600.webp 600w, /skills-crt-900.webp 900w, /skills-crt-1200.webp 1200w"
+              sizes="(max-width: 700px) 92vw, 720px"
+              type="image/webp"
+            />
+            <img
+              className={styles.crt}
+              src="/skills-crt.png"
+              srcSet="/skills-crt-600.png 600w, /skills-crt-900.png 900w, /skills-crt.png 1200w"
+              sizes="(max-width: 700px) 92vw, 720px"
+              alt=""
+              width={1200}
+              height={1040}
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
+
+          {/* the glass — clipped to the exact corners of the screen in the
+              photograph, so nothing on it can spill onto the bezel */}
+          <div ref={glass} className={styles.glass}>
+            {/* full listing: readable while the TV fills the view */}
+            <SkillBlocks className={styles.screenList} />
+
+            {/* at rest the glass is too small for 61 lines, so it carries
+                only the area headings — a visual summary of the list above,
+                hidden from assistive tech to avoid reading it twice */}
+            <div className={styles.screenHeadings} aria-hidden="true">
+              {stack.map((row) => (
+                <span key={row.code} className={styles.lineHead}>
+                  <span className={styles.prompt}>&gt;</span>
+                  <span className={styles.headCode}>{row.code}</span>
+                  <span className={styles.headTitle}>{row.title}</span>
+                </span>
+              ))}
+              <span className={styles.lineHead}>
+                <span className={styles.prompt}>&gt;</span>
+                <span className={styles.caret} />
+              </span>
+            </div>
+
+            <span className={styles.scanlines} aria-hidden="true" />
+            <span className={styles.glare} aria-hidden="true" />
+          </div>
         </div>
 
-        <ul>
-          {stack.map((row) => (
-            <li key={row.code} className={styles.row}>
-              <div className={styles.grid}>
-                <div className={styles.colCode}>
-                  <span className={`${styles.code} ${styles.reveal}`}>
-                    <ScrambleCode text={row.code} reduced={reduced} />
-                  </span>
-                  <span className={`${styles.id} ${styles.reveal}`}>
-                    {row.id}
-                  </span>
-                </div>
+        {/* On phones and under reduced motion the full list cannot live on the
+            glass, so it is printed on the paper instead. Only one of this and
+            the on-screen listing is ever displayed. */}
+        <SkillBlocks className={styles.printed} />
 
-                <h3 className={`${styles.title} display ${styles.reveal}`}>
-                  {row.title}
-                </h3>
-
-                <div className={styles.cols}>
-                  <ul className={styles.col}>
-                    {row.colA.map((t) => (
-                      <li key={t} className={styles.tagWrap}>
-                        <span className={styles.tagA}>{t}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <ul className={styles.col}>
-                    {row.colB.map((t) => (
-                      <li key={t} className={styles.tagWrap}>
-                        <span className={styles.tagB}>{t}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              <SpectrumArrow from={row.from} to={row.to} />
-            </li>
-          ))}
-        </ul>
+        <div className={styles.footer}>
+          <Barcode seed="STK 02-26" className={styles.barcode} bars={30} />
+          <span className={styles.footerText}>
+            <span>— 002/007</span>
+            <span>toolkit</span>
+          </span>
+        </div>
       </div>
     </section>
   );
