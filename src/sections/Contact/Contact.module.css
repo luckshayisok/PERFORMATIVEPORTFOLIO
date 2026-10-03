@@ -62,6 +62,9 @@
 }
 
 .value {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
   font-family: var(--display);
   font-size: clamp(20px, 2.6vw, 34px);
   line-height: 1.1;

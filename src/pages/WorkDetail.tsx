@@ -8,6 +8,8 @@ import { Plate } from '../components/Plate/Plate';
 import { NotFound } from './NotFound';
 import styles from './WorkDetail.module.css';
 
+const SHOT_SIZES = '(max-width: 860px) 92vw, 760px';
+
 export function WorkDetail({ reduced }: { reduced: boolean }) {
   const { slug } = useParams();
   const scope = useRef<HTMLElement>(null);
@@ -85,14 +87,21 @@ export function WorkDetail({ reduced }: { reduced: boolean }) {
             recognisable on arrival */}
         {item.shot ? (
           <picture className={styles.shotWrap}>
-            <source srcSet={item.shot.webp} type="image/webp" />
+            <source
+              srcSet={item.shot.webpSet}
+              sizes={SHOT_SIZES}
+              type="image/webp"
+            />
             <img
               className={styles.shot}
               src={item.shot.src}
+              srcSet={item.shot.srcSet}
+              sizes={SHOT_SIZES}
               width={item.shot.width}
               height={item.shot.height}
               alt={item.shot.alt}
               decoding="async"
+              fetchPriority="high"
             />
           </picture>
         ) : (

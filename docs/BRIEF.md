@@ -747,3 +747,28 @@ buttons sit above it, so no anchor is ever nested inside another.
   product. Signing in is not mine to do.
 - Images are referenced from `shot` in `src/data/site.ts`; drop in a `.jpg`
   and `.webp` at the same paths and update `width`/`height`.
+
+### Part 10b — résumé and the real toolkit (2026-10-03)
+
+- `public/Lakshya-Maheshwari-Resume.pdf` is the download behind the hero's
+  second button and the Résumé row in Contact. Replace the file in place to
+  update it; the path is `profile.resume` in `src/data/site.ts`.
+- `stack` is now taken verbatim from the résumé's Technical Skills —
+  Languages, Frameworks & Libraries, Databases, AI/ML & RAG, Dev Tools &
+  Platforms, Coursework. 56 tools, which is what the toolkit plate now draws.
+- Geonix gained the backend the site was missing (Django REST, PostgreSQL,
+  Redux Toolkit) — the résumé lists it, the old entry did not.
+- Location is Delhi, India, per the résumé.
+
+**Screenshots are captured with headless Chrome, not the preview pane**, which
+only paints a 645×460 region and produced soft, upscaled images:
+
+```
+chrome --headless=new --disable-gpu --hide-scrollbars \
+  --window-size=1440,900 --force-device-scale-factor=2 \
+  --virtual-time-budget=12000 --screenshot=out.png <url>
+```
+
+That gives 2880×1800; `public/work/<slug>-{800,1600}.{jpg,webp}` are resized
+from it and referenced through `srcSet`/`sizes`, so a 2× display gets the
+1600 and a phone never downloads it.

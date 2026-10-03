@@ -1,5 +1,4 @@
 import { useMemo, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { Ink, chamferPts, circlePts, rectPts, rotatePts, type Pt } from '../../lib/ink';
 import { profile, hero } from '../../data/site';
 import { gsap, useGSAP } from '../../lib/gsap';
@@ -311,9 +310,9 @@ export function Hero({ reduced }: { reduced: boolean }) {
           <a className={`${styles.btn} ${styles.solid}`} href="#work">
             See the work
           </a>
-          <Link className={styles.btn} to="/#contact">
-            Get in touch
-          </Link>
+          <a className={styles.btn} href={profile.resume} download>
+            Download résumé <span aria-hidden="true">&#8595;</span>
+          </a>
         </div>
         <p className={styles.meta}>
           <span>{profile.location}</span>

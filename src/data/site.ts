@@ -7,12 +7,15 @@
 
 export const profile = {
   name: 'Lakshya Maheshwari',
-  location: 'India',
+  location: 'Delhi, India',
   email: 'lakshyamaheshwari870@gmail.com',
   emailDisplay: 'LAKSHYAMAHESHWARI870@GMAIL.COM',
   phone: '+919354585287',
   phoneDisplay: '+91 93545 85287',
   github: 'https://github.com/luckshayisok',
+  /** served from /public; replace the file to update the download */
+  resume: '/Lakshya-Maheshwari-Resume.pdf',
+  resumeName: 'Lakshya-Maheshwari-Resume.pdf',
   githubDisplay: 'github.com/luckshayisok',
   bio: [
     'I work full-stack on an AI-powered IT helpdesk platform, mostly on the parts users never see: silent installers, fixer scripts that run in SYSTEM context, Django REST backends, and the NLU layer that decides what a request actually means.',
@@ -92,7 +95,14 @@ export type WorkItem = {
   demo?: string;
   /** A real screenshot of the running project. Where there is no public
       build to photograph, the card falls back to the plate below. */
-  shot?: { src: string; webp: string; width: number; height: number; alt: string };
+  shot?: {
+    src: string;
+    srcSet: string;
+    webpSet: string;
+    width: number;
+    height: number;
+    alt: string;
+  };
   /** Which generator draws this project's plate when there is no shot, and
       the one number that cannot be counted from this file: commits in its
       public repository, read from the GitHub API on 2026-10-03. */
@@ -124,10 +134,11 @@ export const work: WorkItem[] = [
     repo: 'https://github.com/luckshayisok/prepify',
     demo: 'https://prepify-chi.vercel.app',
     shot: {
-      src: '/work/prepify.jpg',
-      webp: '/work/prepify.webp',
-      width: 516,
-      height: 366,
+      src: '/work/prepify-1600.jpg',
+      srcSet: '/work/prepify-800.jpg 800w, /work/prepify-1600.jpg 1600w',
+      webpSet: '/work/prepify-800.webp 800w, /work/prepify-1600.webp 1600w',
+      width: 1600,
+      height: 1000,
       alt: "Prepify's landing page: “Practice interviews until they feel easy.”",
     },
     plate: 'orbits',
@@ -166,7 +177,7 @@ export const work: WorkItem[] = [
     tagline: 'Attendance and geofencing for a workforce.',
     year: '2026',
     role: 'Author',
-    tags: ['React', 'Vite', 'TypeScript', 'Geofencing'],
+    tags: ['React', 'TypeScript', 'Django REST', 'PostgreSQL'],
     summary: [
       'An employee attendance and geofencing system: a React dashboard for the web, with shared types, services and utilities factored out for a React Native client.',
       'Attendance is bound to location, so a check-in only counts inside the boundary it belongs to.',
@@ -176,14 +187,15 @@ export const work: WorkItem[] = [
       'Shared types and services split out so web and mobile stay in step.',
       'Geofenced check-in rather than honour-system attendance.',
     ],
-    stack: ['React', 'Vite', 'TypeScript', 'Geofencing'],
+    stack: ['React (Vite)', 'TypeScript', 'Redux Toolkit', 'Django REST', 'PostgreSQL'],
     repo: 'https://github.com/luckshayisok/GEONIX',
     demo: 'https://geonix-beta.vercel.app',
     shot: {
-      src: '/work/geonix.jpg',
-      webp: '/work/geonix.webp',
-      width: 516,
-      height: 366,
+      src: '/work/geonix-1600.jpg',
+      srcSet: '/work/geonix-800.jpg 800w, /work/geonix-1600.jpg 1600w',
+      webpSet: '/work/geonix-800.webp 800w, /work/geonix-1600.webp 1600w',
+      width: 1600,
+      height: 1000,
       alt: "The Geonix sign-in screen, with the geofencing globe beside it.",
     },
     plate: 'graph',
@@ -236,10 +248,11 @@ export const work: WorkItem[] = [
     repo: 'https://github.com/luckshayisok/kaizen',
     demo: 'https://kaizen-theta-five.vercel.app',
     shot: {
-      src: '/work/kaizen.jpg',
-      webp: '/work/kaizen.webp',
-      width: 516,
-      height: 366,
+      src: '/work/kaizen-1600.jpg',
+      srcSet: '/work/kaizen-800.jpg 800w, /work/kaizen-1600.jpg 1600w',
+      webpSet: '/work/kaizen-800.webp 800w, /work/kaizen-1600.webp 1600w',
+      width: 1600,
+      height: 1000,
       alt: "Kaizen's sign-in screen.",
     },
     plate: 'orbits',
@@ -259,60 +272,80 @@ export type StackRow = {
 
 export const stack: StackRow[] = [
   {
-    code: 'BCK',
-    id: 'BCK 02-26-01',
-    title: 'Backend & APIs',
-    colA: ['Python', 'Django', 'Django REST Framework'],
-    colB: ['PostgreSQL', 'Auth', 'Alert systems'],
-    from: 'SCR',
-    to: 'API',
+    code: 'LNG',
+    id: 'LNG 01-26-01',
+    title: 'Languages',
+    colA: ['Python', 'JavaScript'],
+    colB: ['Java', 'Windows Batch Scripting'],
+    from: 'SRC',
+    to: 'RUN',
   },
   {
-    code: 'AUT',
-    id: 'AUT 03-26-02',
-    title: 'Windows Automation',
-    colA: ['PowerShell', 'Silent installers', 'SYSTEM context'],
-    colB: ['Exit codes', 'Registry', 'Self-healing fixes'],
-    from: 'EXE',
-    to: 'FIX',
-  },
-  {
-    code: 'CAI',
-    id: 'CAI 04-26-03',
-    title: 'Conversational AI',
-    colA: ['Rasa', 'NLU training data', 'Intent design'],
-    colB: ['RAG', 'FAISS', 'sentence-transformers'],
-    from: 'NLU',
-    to: 'ANS',
-  },
-  {
-    code: 'DSK',
-    id: 'DSK 05-26-04',
-    title: 'Desktop & IPC',
-    colA: ['Electron', 'IPC channels', 'Renderer'],
-    colB: ['Notifications', 'Packaging', 'Updates'],
-    from: 'IPC',
+    code: 'FRM',
+    id: 'FRM 02-26-02',
+    title: 'Frameworks & Libraries',
+    colA: [
+      'React.js',
+      'Node.js',
+      'Django',
+      'Express.js',
+      'Redux Toolkit',
+      'RTK Query',
+      'Electron.js',
+    ],
+    colB: [
+      'Rasa (NLU)',
+      'LangChain',
+      'Sentence-Transformers',
+      'NumPy',
+      'Pandas',
+      'Matplotlib',
+    ],
+    from: 'API',
     to: 'APP',
   },
   {
-    code: 'FRO',
-    id: 'FRO 06-26-05',
-    title: 'Frontend & Motion',
-    colA: ['React', 'Next.js', 'TypeScript'],
-    colB: ['GSAP', 'Three.js', 'Tailwind'],
-    from: 'DOM',
-    to: 'FPS',
-  },
-  {
     code: 'DAT',
-    id: 'DAT 07-26-06',
-    title: 'Data & Persistence',
-    colA: ['PostgreSQL', 'Prisma', 'Migrations'],
-    colB: ['FAISS', 'Chroma', 'Embeddings'],
+    id: 'DAT 03-26-03',
+    title: 'Databases',
+    colA: ['PostgreSQL', 'SQL'],
+    colB: ['MongoDB', 'FAISS (Vector DB)'],
     from: 'ROW',
     to: 'IDX',
   },
+  {
+    code: 'RAG',
+    id: 'RAG 04-26-04',
+    title: 'AI / ML & RAG',
+    colA: [
+      'Retrieval-Augmented Generation',
+      'LLM integration (Gemini API)',
+      'Semantic search',
+    ],
+    colB: ['Vector embeddings', 'Cosine similarity', 'Prompt engineering'],
+    from: 'ASK',
+    to: 'ANS',
+  },
+  {
+    code: 'DEV',
+    id: 'DEV 05-26-05',
+    title: 'Dev Tools & Platforms',
+    colA: ['Git', 'GitHub', 'VS Code'],
+    colB: ['Postman', 'Windows Services', 'CI/CD basics'],
+    from: 'DIF',
+    to: 'SHP',
+  },
+  {
+    code: 'CRS',
+    id: 'CRS 06-26-06',
+    title: 'Coursework',
+    colA: ['Data Structures & Algorithms', 'Operating Systems', 'DBMS'],
+    colB: ['Computer Networks', 'OOP'],
+    from: 'THY',
+    to: 'USE',
+  },
 ];
+
 
 
 

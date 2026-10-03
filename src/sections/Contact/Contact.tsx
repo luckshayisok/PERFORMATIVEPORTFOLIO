@@ -70,6 +70,12 @@ export function Contact({ reduced }: { reduced: boolean }) {
               {profile.githubDisplay}
             </a>
           </li>
+          <li className={styles.row}>
+            <span className={styles.label}>Résumé</span>
+            <a className={styles.value} href={profile.resume} download>
+              {profile.resumeName} <span aria-hidden="true">&#8595;</span>
+            </a>
+          </li>
         </ul>
 
         <footer className={styles.colophon}>

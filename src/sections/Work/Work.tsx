@@ -5,6 +5,9 @@ import { Plate } from '../../components/Plate/Plate';
 import { gsap, useGSAP } from '../../lib/gsap';
 import styles from './Work.module.css';
 
+/* the card is one of three columns, then two, then the full measure */
+const SHOT_SIZES = '(max-width: 620px) 92vw, (max-width: 1040px) 46vw, 31vw';
+
 /**
  * Plate 01 — the work.
  *
@@ -64,10 +67,16 @@ export function Work({ reduced }: { reduced: boolean }) {
               <div className={styles.frame}>
                 {item.shot ? (
                   <picture>
-                    <source srcSet={item.shot.webp} type="image/webp" />
+                    <source
+                      srcSet={item.shot.webpSet}
+                      sizes={SHOT_SIZES}
+                      type="image/webp"
+                    />
                     <img
                       className={styles.shot}
                       src={item.shot.src}
+                      srcSet={item.shot.srcSet}
+                      sizes={SHOT_SIZES}
                       width={item.shot.width}
                       height={item.shot.height}
                       alt={item.shot.alt}
