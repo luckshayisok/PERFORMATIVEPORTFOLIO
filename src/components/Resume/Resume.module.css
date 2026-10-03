@@ -1,0 +1,139 @@
+/* ============================================================
+   THE RÉSUMÉ PANEL
+   A sheet of paper held up over the page, with the file's own
+   controls along its top edge.
+   ============================================================ */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(12px, 3vw, 40px);
+  background: rgba(18, 17, 16, 0.72);
+  animation: fade 0.22s var(--ease);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 980px);
+  height: min(100%, 92svh);
+  background: var(--paper);
+  border: 1px solid var(--ink);
+  animation: rise 0.28s var(--ease);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 12px clamp(12px, 2vw, 18px);
+  border-bottom: 1px solid var(--rule-soft);
+}
+
+.title {
+  font-family: var(--mono);
+  font-size: var(--mono-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  min-width: 0;
+}
+
+.tools {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: var(--mono-xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 13px;
+  border: 1.5px solid var(--ink);
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+.tool:hover,
+.tool:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.solid {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.solid:hover,
+.solid:focus-visible {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid var(--ink);
+  font-size: 20px;
+  line-height: 1;
+}
+
+.close:hover,
+.close:focus-visible {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.frame {
+  flex: 1;
+  min-height: 0;
+  background: var(--paper-2);
+}
+
+.pdf {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+@media (max-width: 620px) {
+  .title {
+    width: 100%;
+  }
+  .tools {
+    margin-left: 0;
+    width: 100%;
+  }
+  .close {
+    margin-left: auto;
+  }
+}

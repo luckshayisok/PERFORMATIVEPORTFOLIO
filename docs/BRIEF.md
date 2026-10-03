@@ -772,3 +772,28 @@ chrome --headless=new --disable-gpu --hide-scrollbars \
 That gives 2880×1800; `public/work/<slug>-{800,1600}.{jpg,webp}` are resized
 from it and referenced through `srcSet`/`sizes`, so a 2× display gets the
 1600 and a phone never downloads it.
+
+### Part 10c — the stage, rebalanced, and the résumé read in place
+
+The first cut of the hero had the two lines of the name touching: the M of
+MAHESHWARI collided with the LA above it, which reads as a mistake rather
+than a decision. The lines now have 64px of air between them (`L1_BASE` 300,
+`L2_CAP` 364) and only the drawings cross the gap.
+
+The ground band was also a hole — two machines at the edges and nothing
+between them. It now reads left to right: screen, lamp, plant, keyboard,
+floppy, tower, with a cable running under all of it and contact shadows
+where each object meets the ground. Three rules held while placing them:
+
+- an object may cover a letter's feet, never a whole letter — the tower was
+  swallowing the final I and had to move right and down;
+- anything standing on the first line needs headroom in the viewBox
+  (`y = -62`), or the bot's aerial and the mug's steam crop;
+- nothing floats: every object gets a shadow, and the cable runs off the
+  frame rather than ending in a plug under the ground line.
+
+**The résumé opens in a panel** (`components/Resume`) rather than downloading
+on click — looking at a file is not a commitment, downloading one is. The
+panel carries the download, an open-in-a-tab link for mobile browsers that
+will not render a PDF in an iframe, Escape to close, a focus trap, and it
+returns focus to whichever button opened it.

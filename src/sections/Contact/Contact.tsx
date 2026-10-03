@@ -11,7 +11,13 @@ const YEAR = new Date().getFullYear();
  * The three ways to reach me, and a colophon that says plainly how the
  * drawings on this page were made.
  */
-export function Contact({ reduced }: { reduced: boolean }) {
+export function Contact({
+  reduced,
+  onOpenResume,
+}: {
+  reduced: boolean;
+  onOpenResume: () => void;
+}) {
   const scope = useRef<HTMLElement>(null);
 
   useGSAP(
@@ -72,9 +78,14 @@ export function Contact({ reduced }: { reduced: boolean }) {
           </li>
           <li className={styles.row}>
             <span className={styles.label}>Résumé</span>
-            <a className={styles.value} href={profile.resume} download>
-              {profile.resumeName} <span aria-hidden="true">&#8595;</span>
-            </a>
+            <button
+              type="button"
+              className={styles.value}
+              onClick={onOpenResume}
+              aria-haspopup="dialog"
+            >
+              View it here <span aria-hidden="true">&#8599;</span>
+            </button>
           </li>
         </ul>
 

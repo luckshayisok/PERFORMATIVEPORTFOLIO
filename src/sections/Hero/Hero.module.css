@@ -20,7 +20,7 @@
    taller than the screen it has to fit into, so the whole hero — name,
    line and buttons — lands on one screen without scrolling. */
 .stage {
-  width: min(100% - var(--gutter) * 2, calc((100svh - 330px) * 1.577), var(--maxw));
+  width: min(100% - var(--gutter) * 2, calc((100svh - 330px) * 1.456), var(--maxw));
   margin-inline: auto;
 }
 

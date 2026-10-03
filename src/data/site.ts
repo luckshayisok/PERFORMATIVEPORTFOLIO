@@ -33,10 +33,10 @@ export const hero = {
   role: 'Software engineer',
   tagline: 'I build the parts users never see.',
   marks: [
-    { text: '{ }', x: 112, y: 46, size: 30, rot: -12 },
-    { text: '0x1', x: 962, y: 6, size: 22, rot: 9 },
-    { text: '&gt;_', x: 352, y: 626, size: 24, rot: -5 },
-    { text: 'exit 3010', x: 772, y: 622, size: 17, rot: -2 },
+    { text: '{ }', x: 104, y: 40, size: 30, rot: -12 },
+    { text: '0x1', x: 972, y: -8, size: 22, rot: 9 },
+    { text: '&gt;_', x: 352, y: 678, size: 24, rot: -5 },
+    { text: 'exit 3010', x: 676, y: 622, size: 17, rot: -2 },
   ],
 } as const;
 
