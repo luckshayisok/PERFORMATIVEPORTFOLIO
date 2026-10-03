@@ -112,6 +112,36 @@ export type WorkItem = {
 
 export const work: WorkItem[] = [
   {
+    code: 'VRT',
+    id: 'VRT 06-25-04',
+    slug: 'veritas-rag',
+    label: 'PERSONAL',
+    name: 'Veritas-RAG',
+    tagline: 'Semantic search over a company’s own documents.',
+    year: '2025',
+    role: 'Author',
+    tags: ['Python', 'LangChain', 'FAISS', 'Gemini API'],
+    summary: [
+      "An enterprise knowledge intelligence suite: ask a question in plain language and get an answer drawn from the organisation's own material rather than from whatever the model happens to remember.",
+      'Retrieval runs over a FAISS index built by a Sentence-Transformers embedding pipeline, and Gemini synthesises the answer from what comes back — so every claim is anchored to a document that actually exists.',
+    ],
+    highlights: [
+      'Semantic retrieval across 500+ corporate assets, at 92% accuracy.',
+      'Query latency under 350ms, through chunking strategy and tuned cosine-similarity search.',
+      'A secure Gemini API integration whose prompt engineering cut hallucinations by 40%.',
+    ],
+    stack: [
+      'Python',
+      'LangChain',
+      'FAISS',
+      'Sentence-Transformers',
+      'Gemini API',
+    ],
+    /* The GitHub repo of this name is empty — created, never pushed to — so
+       there is nothing to link. Push the code and add `repo` here. */
+    plate: 'weave',
+  },
+  {
     code: 'PRP',
     id: 'PRP 09-26-05',
     slug: 'prepify',

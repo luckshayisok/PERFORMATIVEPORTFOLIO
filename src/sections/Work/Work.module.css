@@ -122,7 +122,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: auto;
   padding-top: 10px;
 }
 
@@ -138,6 +137,7 @@
 .links {
   position: relative;
   z-index: 2;
+  margin-top: auto;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
